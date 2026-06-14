@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Node / Vite
+node_modules/
+dist/
+.vite/
+
+# Env / secrets
+.env
+.env.local
+*.local
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# 브랜드 필름 (별도 영상 제출물: 라이선스 음원·대용량 mp4·렌더 산출물·playwright)
+film/
+
+# 로그 / 빌드 중간 산출물
+*.log
+docs/render/
+
+# 내부 전략·초안 문서 (공개 레포 제외)
+/09_제안서_작성패턴_DB.md
+docs/제안서_초안.md
+docs/기능명세서_초안.md

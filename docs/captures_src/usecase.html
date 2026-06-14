@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>마중(Majung) 유스케이스 다이어그램</title>
+<style>
+  body { margin: 0; background: #fff; }
+  svg { display: block; font-family: "Malgun Gothic", "Segoe UI", sans-serif; }
+  .ttl   { font-size: 22px; font-weight: 700; fill: #173a5c; }
+  .sub   { font-size: 12px; fill: #5d7186; }
+  .bnd   { fill: #f7fafd; stroke: #9cc2e5; stroke-width: 1.6; }
+  .bndt  { font-size: 15px; font-weight: 700; fill: #1f4e79; }
+  .uc    { fill: #fff; stroke: #1f4e79; stroke-width: 1.5; }
+  .ucg   { fill: #e7f0fa; stroke: #1f4e79; stroke-width: 2.2; }
+  .ucm   { font-size: 14.5px; font-weight: 700; fill: #15273b; text-anchor: middle; }
+  .ucs   { font-size: 11.5px; fill: #5d7186; text-anchor: middle; }
+  .al    { stroke: #44607e; stroke-width: 1.4; fill: none; }
+  .dl    { stroke: #5d7186; stroke-width: 1.3; fill: none; stroke-dasharray: 6 4; }
+  .lbl   { font-size: 11px; fill: #46627f; font-style: italic; }
+  .act   { stroke: #173a5c; stroke-width: 2; fill: none; }
+  .acthead { fill: #fff; stroke: #173a5c; stroke-width: 2; }
+  .actt  { font-size: 14px; font-weight: 700; fill: #15273b; text-anchor: middle; }
+  .acts  { font-size: 12px; fill: #5d7186; text-anchor: middle; }
+  .sysb  { fill: #fff; stroke: #173a5c; stroke-width: 1.6; }
+  .llmb  { fill: #fff; stroke: #1f4e79; stroke-width: 1.5; stroke-dasharray: 7 4; }
+  .trg   { fill: #deebf7; stroke: #2e75b6; stroke-width: 1.4; }
+  .warn  { font-size: 11.5px; font-weight: 700; fill: #c0392b; text-anchor: middle; }
+  .strip { fill: #deebf7; }
+  .stript{ font-size: 14px; font-weight: 700; fill: #173a5c; text-anchor: middle; }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1500 1090" width="1500" height="1090" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#44607e"/>
+    </marker>
+    <marker id="ahd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#5d7186" stroke-width="1.6"/>
+    </marker>
+  </defs>
+
+  <!-- 제목 -->
+  <text class="ttl" x="40" y="44">마중(Majung) 유스케이스: 위임(Mandate)형 뱅킹 에이전트</text>
+  <text class="sub" x="40" y="68">실선 = 액터 연계 · 점선 = «include» / «extend» · (모의) = 예선 모의 구현 범위</text>
+
+  <!-- 시스템 경계 -->
+  <rect class="bnd" x="330" y="100" width="850" height="900" rx="16"/>
+  <text class="bndt" x="755" y="130" text-anchor="middle">마중 (Majung), 위임형 뱅킹 에이전트</text>
+
+  <!-- ── 액터: 외국인 근로자 ── -->
+  <g>
+    <circle class="acthead" cx="150" cy="262" r="14"/>
+    <line class="act" x1="150" y1="276" x2="150" y2="316"/>
+    <line class="act" x1="128" y1="290" x2="172" y2="290"/>
+    <line class="act" x1="150" y1="316" x2="132" y2="344"/>
+    <line class="act" x1="150" y1="316" x2="168" y2="344"/>
+    <text class="actt" x="150" y="368">외국인 근로자</text>
+    <text class="acts" x="150" y="385">(E-9 · 모국어 사용)</text>
+  </g>
+
+  <!-- ── 액터: 보호자/관리자 ── -->
+  <g>
+    <circle class="acthead" cx="150" cy="802" r="14"/>
+    <line class="act" x1="150" y1="816" x2="150" y2="856"/>
+    <line class="act" x1="128" y1="830" x2="172" y2="830"/>
+    <line class="act" x1="150" y1="856" x2="132" y2="884"/>
+    <line class="act" x1="150" y1="856" x2="168" y2="884"/>
+    <text class="actt" x="150" y="908">관리자 (JB)</text>
+    <text class="acts" x="150" y="925">대시보드 · STR 검토</text>
+  </g>
+
+  <!-- ── LLM (의도 파싱만, 실행 경로 밖) ── -->
+  <g>
+    <rect class="llmb" x="55" y="95" width="210" height="66" rx="10"/>
+    <text class="actt" x="160" y="122">LLM: 의도 파싱만</text>
+    <text class="warn" x="160" y="146">실행 경로에 없음 · 결정 권한 없음</text>
+  </g>
+
+  <!-- ── 트리거(이벤트) ── -->
+  <g>
+    <rect class="trg" x="50" y="600" width="205" height="62" rx="12"/>
+    <text class="actt" x="152" y="626">급여입금 감지 · 환율 피드</text>
+    <text class="acts" x="152" y="646">자동 트리거 (고객 개입 없음)</text>
+  </g>
+
+  <!-- ── 외부 시스템(우측) ── -->
+  <g>
+    <rect class="sysb" x="1255" y="305" width="180" height="70" rx="10"/>
+    <text class="actt" x="1345" y="333">JB 심사엔진 (모의)</text>
+    <text class="acts" x="1345" y="353">«외부 시스템» 승인 배타 권한</text>
+  </g>
+  <g>
+    <rect class="sysb" x="1255" y="625" width="180" height="70" rx="10"/>
+    <text class="actt" x="1345" y="653">한패스 레일 (모의)</text>
+    <text class="acts" x="1345" y="673">«외부 시스템» 송금 레일</text>
+  </g>
+
+  <!-- ── 유스케이스 1열 ── -->
+  <g>
+    <ellipse class="uc" cx="560" cy="200" rx="128" ry="40"/>
+    <text class="ucm" x="560" y="197">위임장 발급·서명</text>
+    <text class="ucs" x="560" y="215">모국어 재확인 + 전자서명</text>
+
+    <ellipse class="uc" cx="560" cy="340" rx="128" ry="40"/>
+    <text class="ucm" x="560" y="337">사채 대환 가심사</text>
+    <text class="ucs" x="560" y="355">연 ~246만원 절약 안내 (승인 아님)</text>
+
+    <ellipse class="uc" cx="560" cy="480" rx="128" ry="40"/>
+    <text class="ucm" x="560" y="477">위임 철회</text>
+    <text class="ucs" x="560" y="495">무조건 철회권 (사유와 수수료 없음)</text>
+
+    <ellipse class="uc" cx="560" cy="660" rx="128" ry="40"/>
+    <text class="ucm" x="560" y="657">위임 송금 자동 실행</text>
+    <text class="ucs" x="560" y="675">급여 트리거 · 1회/월 200만 한도</text>
+
+    <ellipse class="uc" cx="560" cy="880" rx="128" ry="40"/>
+    <text class="ucm" x="560" y="877">감사로그·STR 큐 조회</text>
+    <text class="ucs" x="560" y="895">전 게이트 판정 기록, 설명 가능성 확보</text>
+  </g>
+
+  <!-- ── 유스케이스 2열 ── -->
+  <g>
+    <ellipse class="uc" cx="990" cy="200" rx="128" ry="40"/>
+    <text class="ucm" x="990" y="197">건별 모국어 통지</text>
+    <text class="ucs" x="990" y="215">실행·보류 즉시 푸시 + [철회] 버튼</text>
+
+    <ellipse class="uc" cx="990" cy="340" rx="128" ry="40"/>
+    <text class="ucm" x="990" y="337">JB 심사엔진 회부</text>
+    <text class="ucs" x="990" y="355">승인이 아닌 접수번호 발급</text>
+
+    <ellipse class="uc" cx="990" cy="480" rx="128" ry="40"/>
+    <text class="ucm" x="990" y="477">의심거래 자동 보류</text>
+    <text class="ucs" x="990" y="495">+ 모국어 질문 · score ≥ 70 → STR 큐</text>
+
+    <ellipse class="ucg" cx="990" cy="660" rx="128" ry="40"/>
+    <text class="ucm" x="990" y="657">3중 게이트 판정</text>
+    <text class="ucs" x="990" y="675">Gate A 위임장 · B Rule·FX · C AML</text>
+
+    <ellipse class="uc" cx="990" cy="840" rx="128" ry="40"/>
+    <text class="ucm" x="990" y="837">사기 수취인 차단</text>
+    <text class="ucs" x="990" y="855">블랙리스트 판정 시 즉시 차단</text>
+  </g>
+
+  <!-- ── 액터 연계(실선) ── -->
+  <line class="al" x1="182" y1="282" x2="432" y2="210"/>
+  <line class="al" x1="184" y1="300" x2="432" y2="335"/>
+  <line class="al" x1="180" y1="318" x2="432" y2="468"/>
+  <line class="al" x1="182" y1="842" x2="432" y2="876"/>
+  <!-- 트리거 → 자동 실행 -->
+  <line class="al" x1="255" y1="634" x2="426" y2="656" marker-end="url(#ah)"/>
+  <!-- 회부 → JB 심사엔진 / 게이트 PASS → 한패스 -->
+  <line class="al" x1="1118" y1="340" x2="1255" y2="340" marker-end="url(#ah)"/>
+  <text class="lbl" x="1128" y="330">회부(접수번호)</text>
+  <line class="al" x1="1118" y1="660" x2="1255" y2="660" marker-end="url(#ah)"/>
+  <text class="lbl" x="1126" y="650">PASS 시 송금</text>
+
+  <!-- ── LLM 점선(의도 파싱) ── -->
+  <line class="dl" x1="240" y1="161" x2="448" y2="185" marker-end="url(#ahd)"/>
+  <text class="lbl" x="300" y="160">의도 파싱</text>
+  <line class="dl" x1="200" y1="161" x2="445" y2="318" marker-end="url(#ahd)"/>
+
+  <!-- ── include / extend ── -->
+  <line class="dl" x1="688" y1="660" x2="862" y2="660" marker-end="url(#ahd)"/>
+  <text class="lbl" x="716" y="650">«include» 전부 통과 시만 실행</text>
+
+  <path class="dl" d="M664,630 L880,232" marker-end="url(#ahd)"/>
+  <text class="lbl" x="742" y="420" transform="rotate(-61 742 420)">«include» 건별 통지</text>
+
+  <path class="dl" d="M868,508 L694,634" marker-end="url(#ahd)"/>
+  <text class="lbl" x="700" y="560">«extend» 위임 밖·의심</text>
+
+  <line class="dl" x1="990" y1="800" x2="990" y2="700" marker-end="url(#ahd)"/>
+  <text class="lbl" x="1000" y="756">«extend» 블랙리스트</text>
+
+  <line class="dl" x1="688" y1="340" x2="862" y2="340" marker-end="url(#ahd)"/>
+  <text class="lbl" x="722" y="330">«include» 가심사 후 회부</text>
+
+  <!-- ── 제1원칙 스트립 ── -->
+  <rect class="strip" x="40" y="1028" width="1420" height="44" rx="10"/>
+  <text class="stript" x="750" y="1056">제1원칙: 송금 절차에서 LLM 배제 · 판단(Gate A·B·C) → 행동(실행/보류/차단) → 검증·개선(감사로그·STR 큐)</text>
+</svg>
+</body>
+</html>

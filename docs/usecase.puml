@@ -1,0 +1,77 @@
+@startuml 마중_유스케이스
+' 마중(Majung) 유스케이스 다이어그램, 기능명세서 §4(주요 기능 흐름도)용
+' 렌더: PlantUML (https://www.plantuml.com/plantuml) 또는 VS Code PlantUML 확장
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+actor "외국인 근로자\n(E-9, 모국어)" as User
+actor "보호자/관리자\n(대시보드)" as Admin
+
+actor "환율 피드" as FX
+actor "한패스 레일\n(모의)" as Hanpass
+actor "JB 심사엔진\n(모의)" as JBEngine
+actor "LLM\n(의도 파싱)" as LLM
+
+rectangle "마중 (Majung), 위임형 뱅킹 에이전트" {
+
+  ' ── 1단계: 위임 송금 ──
+  usecase "위임장 발급\n(모국어 재확인 + 전자서명)" as UC1
+  usecase "위임 송금 자동 실행\n(급여 트리거)" as UC2
+  usecase "의심거래 자동 보류\n+ 모국어 질문" as UC3
+  usecase "사기 수취인 차단\n(블랙리스트)" as UC4
+  usecase "위임 철회\n(무조건 철회권)" as UC5
+  usecase "건별 모국어 통지" as UC6
+
+  ' ── 3중 게이트 (include) ──
+  usecase "Gate A\n위임장 검증" as GA
+  usecase "Gate B\nRule 한도·FX 조건" as GB
+  usecase "Gate C\nAML 스크리닝" as GC
+  usecase "STR 후보 큐 적재" as UCSTR
+
+  ' ── 2단계: 신용 사다리 ──
+  usecase "사채 대환 가심사\n(연 ~250만원 절약)" as UC7
+  usecase "JB 심사엔진 회부\n(승인 아님)" as UC8
+
+  ' ── 관리/설명가능성 ──
+  usecase "감사로그·STR 큐 조회" as UC9
+}
+
+' 주체(Primary)
+User --> UC1
+User --> UC5
+User --> UC6
+User --> UC7
+Admin --> UC9
+
+' 트리거(이벤트)
+FX --> UC2
+Hanpass <-- UC2 : 송금 레일(모의)
+
+' LLM은 의도 파싱만, 실행 경로에 없음
+LLM ..> UC1 : 의도 파싱
+LLM ..> UC7 : 의도 파싱
+
+' 송금 자동 실행은 3중 게이트를 반드시 포함
+UC2 ..> GA : <<include>>
+UC2 ..> GB : <<include>>
+UC2 ..> GC : <<include>>
+
+' 예외 분기(extend)
+UC3 ..> UC2 : <<extend>>\n위임밖/의심
+UC4 ..> GC : <<extend>>\n블랙리스트 하드컷
+UCSTR ..> GC : <<extend>>\nscore >= 70
+
+' 2단계 흐름
+UC7 ..> UC8 : <<include>>
+UC8 --> JBEngine : 회부(접수번호)
+
+' 통지
+UC2 ..> UC6 : <<include>>
+UC3 ..> UC6 : <<include>>
+
+note bottom of GA
+  제1원칙: "LLM은 송금 실행 경로에 없다."
+  판단(Gate A·B·C) → 행동(실행/보류/알림) → 검증/개선
+end note
+@enduml

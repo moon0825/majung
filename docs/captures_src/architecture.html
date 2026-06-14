@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>마중(Majung) 3중 게이트 아키텍처</title>
+<style>
+  body { margin: 0; background: #fff; }
+  svg { display: block; font-family: "Malgun Gothic", "Segoe UI", sans-serif; }
+  .ttl   { font-size: 22px; font-weight: 700; fill: #173a5c; }
+  .sub   { font-size: 12px; fill: #5d7186; }
+  .badge { fill: #fbeae8; stroke: #c0392b; stroke-width: 1.5; }
+  .badget{ font-size: 14px; font-weight: 700; fill: #c0392b; text-anchor: middle; }
+  .band1 { fill: #deebf7; } .band1t { fill: #1f4e79; }
+  .band2 { fill: #1f4e79; } .band3 { fill: #2e75b6; } .band4 { fill: #173a5c; }
+  .bandt { font-size: 14px; font-weight: 700; fill: #fff; text-anchor: middle; }
+  .chev  { font-size: 20px; font-weight: 700; fill: #1f4e79; text-anchor: middle; }
+  .box   { fill: #fff; stroke: #8aa6c4; stroke-width: 1.4; }
+  .boxh  { font-size: 15px; font-weight: 700; fill: #15273b; }
+  .boxs  { font-size: 12px; fill: #5d7186; }
+  .llm   { fill: #fff; stroke: #1f4e79; stroke-width: 1.6; stroke-dasharray: 7 4; }
+  .chip  { fill: #fbeae8; }
+  .chipt { font-size: 11.5px; font-weight: 700; fill: #c0392b; text-anchor: middle; }
+  .gatec { fill: #eef5fc; stroke: #1f4e79; stroke-width: 2; }
+  .gate  { fill: #fff; stroke: #1f4e79; stroke-width: 1.6; }
+  .gateh { font-size: 15.5px; font-weight: 700; fill: #1f4e79; }
+  .ok    { fill: #e6f4ea; stroke: #1a7f37; stroke-width: 1.8; }
+  .okh   { font-size: 15px; font-weight: 700; fill: #1a7f37; }
+  .hd    { fill: #fff4d6; stroke: #9a6700; stroke-width: 1.8; }
+  .hdh   { font-size: 15px; font-weight: 700; fill: #9a6700; }
+  .bk    { fill: #fbeae8; stroke: #c0392b; stroke-width: 1.8; }
+  .bkh   { font-size: 15px; font-weight: 700; fill: #c0392b; }
+  .vf    { fill: #fff; stroke: #173a5c; stroke-width: 1.8; }
+  .ar    { stroke: #44607e; stroke-width: 1.6; fill: none; }
+  .ard   { stroke: #5d7186; stroke-width: 1.4; fill: none; stroke-dasharray: 7 4; }
+  .lbl   { font-size: 12px; font-weight: 700; fill: #46627f; }
+  .strip { fill: #deebf7; }
+  .stript{ font-size: 13.5px; font-weight: 700; fill: #173a5c; text-anchor: middle; }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1560 750" width="1560" height="750" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#44607e"/>
+    </marker>
+    <marker id="ahd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#5d7186" stroke-width="1.6"/>
+    </marker>
+  </defs>
+
+  <!-- 제목 + 제1원칙 배지 -->
+  <text class="ttl" x="40" y="40">마중(Majung) 시스템 구성: 3중 게이트 아키텍처</text>
+  <rect class="badge" x="1100" y="14" width="420" height="36" rx="18"/>
+  <text class="badget" x="1310" y="38">제1원칙: 송금 절차에서 LLM 배제</text>
+
+  <!-- 평가 라벨 밴드: 수집 → 판단 → 행동 → 검증·개선 -->
+  <rect class="band1" x="40"   y="66" width="540" height="32" rx="8"/>
+  <text class="bandt band1t" x="310" y="88">수집: 발화, 급여, 환율</text>
+  <text class="chev" x="603" y="90">→</text>
+  <rect class="band2" x="626"  y="66" width="400" height="32" rx="8"/>
+  <text class="bandt" x="826" y="88">판단: Gate A·B·C (결정적 코드)</text>
+  <text class="chev" x="1049" y="90">→</text>
+  <rect class="band3" x="1072" y="66" width="250" height="32" rx="8"/>
+  <text class="bandt" x="1197" y="88">행동: 실행/보류/차단</text>
+  <text class="chev" x="1345" y="90">→</text>
+  <rect class="band4" x="1368" y="66" width="152" height="32" rx="8"/>
+  <text class="bandt" x="1444" y="88">검증·개선</text>
+
+  <!-- ── 수집: 입력 3종 ── -->
+  <rect class="box" x="60" y="130" width="250" height="84" rx="10"/>
+  <text class="boxh" x="78" y="158">사용자 발화 (모국어)</text>
+  <text class="boxs" x="78" y="178">"Lương về thì gửi cho mẹ…"</text>
+  <text class="boxs" x="78" y="196">베트남어 자연어 → 챗 UI</text>
+
+  <rect class="box" x="60" y="250" width="250" height="84" rx="10"/>
+  <text class="boxh" x="78" y="278">급여입금 이벤트</text>
+  <text class="boxs" x="78" y="298">모의 뱅킹 코어의 입금 감지</text>
+  <text class="boxs" x="78" y="316">+210만원 → 위임 트리거 발동</text>
+
+  <rect class="box" x="60" y="370" width="250" height="84" rx="10"/>
+  <text class="boxh" x="78" y="398">환율 피드 KRW/VND</text>
+  <text class="boxs" x="78" y="418">현재 18.45 · 7일평균 18.12</text>
+  <text class="boxs" x="78" y="436">+1.82%, 임계치(1% 이상) 충족</text>
+
+  <!-- ── LLM 의도 파싱 (점선 = 실행 경로 밖) ── -->
+  <rect class="llm" x="380" y="130" width="220" height="124" rx="10"/>
+  <text class="boxh" x="398" y="158">LLM 의도 파싱</text>
+  <text class="boxs" x="398" y="178">자연어 → 구조화 intent</text>
+  <text class="boxs" x="398" y="196">파라미터 후보 생성까지만</text>
+  <rect class="chip" x="396" y="212" width="188" height="26" rx="13"/>
+  <text class="chipt" x="490" y="229">실행 결정 배제 (송금 경로 밖)</text>
+
+  <!-- ── 판단: 3중 게이트 컨테이너 ── -->
+  <rect class="gatec" x="640" y="130" width="380" height="436" rx="14"/>
+  <text class="gateh" x="830" y="158" text-anchor="middle" font-size="16.5">3중 게이트: 전부 결정적 코드</text>
+  <text class="boxs"  x="830" y="176" text-anchor="middle">LLM 산출물은 입력일 뿐, 판정과 실행 권한 없음</text>
+
+  <rect class="gate" x="660" y="192" width="340" height="96" rx="10"/>
+  <text class="gateh" x="678" y="218">Gate A: 위임장 검증</text>
+  <text class="boxs" x="678" y="238">전자서명 · 유효기간 · 철회 여부 · 위임 범위</text>
+  <text class="boxs" x="678" y="256">위임장 JSON 스키마 대조 (전금법 거래지시 모의)</text>
+
+  <rect class="gate" x="660" y="320" width="340" height="96" rx="10"/>
+  <text class="gateh" x="678" y="346">Gate B: Rule 한도·FX 조건</text>
+  <text class="boxs" x="678" y="366">1회/월 200만원 한도 · FX 7일평균 대비 ≥1% Rule</text>
+  <text class="boxs" x="678" y="384">예측이 아닌, 사용자가 정한 임계조건만 집행</text>
+
+  <rect class="gate" x="660" y="448" width="340" height="96" rx="10"/>
+  <text class="gateh" x="678" y="474">Gate C: 화이트리스트 + AML</text>
+  <text class="boxs" x="678" y="494">블랙리스트 즉시 차단 · score 임계치 40/70</text>
+  <text class="boxs" x="678" y="512">신규·고액·심야·structuring 가중, 의심 탐지 우선</text>
+
+  <line class="ar" x1="830" y1="288" x2="830" y2="320" marker-end="url(#ah)"/>
+  <text class="lbl" x="840" y="310">통과</text>
+  <line class="ar" x1="830" y1="416" x2="830" y2="448" marker-end="url(#ah)"/>
+  <text class="lbl" x="840" y="438">통과</text>
+
+  <!-- ── 수집 → LLM / 게이트 화살표 ── -->
+  <line class="ar" x1="310" y1="172" x2="380" y2="172" marker-end="url(#ah)"/>
+  <line class="ar" x1="600" y1="192" x2="656" y2="214" marker-end="url(#ah)"/>
+  <text class="lbl" x="588" y="184">intent(후보)</text>
+  <line class="ar" x1="310" y1="292" x2="640" y2="330" marker-end="url(#ah)"/>
+  <text class="lbl" x="420" y="298">트리거 (LLM 비경유)</text>
+  <line class="ar" x1="310" y1="412" x2="640" y2="392" marker-end="url(#ah)"/>
+  <text class="lbl" x="430" y="424">환율 데이터</text>
+
+  <!-- ── 행동: 3분기 ── -->
+  <rect class="ok" x="1072" y="150" width="250" height="124" rx="10"/>
+  <text class="okh" x="1090" y="178">실행: 자동 송금 집행</text>
+  <text class="boxs" x="1090" y="198">한패스 레일(모의) · tx_id 발급</text>
+  <text class="boxs" x="1090" y="216">건별 모국어 통지 + [철회] 버튼</text>
+  <text class="boxs" x="1090" y="234">고객 개입 없이 수면 중 실행</text>
+  <text class="boxs" x="1090" y="252">잔액·감사로그 즉시 반영</text>
+
+  <rect class="hd" x="1072" y="310" width="250" height="104" rx="10"/>
+  <text class="hdh" x="1090" y="338">자동 보류 + 모국어 질문</text>
+  <text class="boxs" x="1090" y="358">"정말 보내려는 분이 맞습니까?"</text>
+  <text class="boxs" x="1090" y="376">score ≥ 70 → STR 후보 큐 적재</text>
+  <text class="boxs" x="1090" y="394">사람 확인 전에는 미집행 (송금 0원)</text>
+
+  <rect class="bk" x="1072" y="450" width="250" height="94" rx="10"/>
+  <text class="bkh" x="1090" y="478">즉시 차단 + 경고</text>
+  <text class="boxs" x="1090" y="498">OTP와 선입금 요구는 사기 패턴</text>
+  <text class="boxs" x="1090" y="516">블랙리스트 판정, 재시도 불가</text>
+
+  <line class="ar" x1="1020" y1="478" x2="1072" y2="220" marker-end="url(#ah)"/>
+  <text class="lbl" x="1030" y="330" fill="#1a7f37">PASS</text>
+  <line class="ar" x1="1020" y1="496" x2="1072" y2="362" marker-end="url(#ah)"/>
+  <text class="lbl" x="1026" y="432" fill="#9a6700">HOLD·STR</text>
+  <line class="ar" x1="1020" y1="514" x2="1072" y2="497" marker-end="url(#ah)"/>
+  <text class="lbl" x="1026" y="528" fill="#c0392b">BLOCK</text>
+
+  <!-- ── 검증·개선 ── -->
+  <rect class="vf" x="1368" y="150" width="152" height="394" rx="10"/>
+  <text class="boxh" x="1384" y="178">검증·개선</text>
+  <text class="boxs" x="1384" y="204">감사로그</text>
+  <text class="boxs" x="1384" y="220">- 전 게이트 판정 기록</text>
+  <text class="boxs" x="1384" y="248">관리자 대시보드</text>
+  <text class="boxs" x="1384" y="264">- 트레이스 실시간</text>
+  <text class="boxs" x="1384" y="292">STR 후보 큐</text>
+  <text class="boxs" x="1384" y="308">- 담당자 검토와 보고</text>
+  <text class="boxs" x="1384" y="336">건별 통지 수신 확인</text>
+  <text class="boxs" x="1384" y="364">FX 임계값 조정 제안</text>
+  <text class="boxs" x="1384" y="380">- 사용자 승인 시 반영</text>
+
+  <line class="ar" x1="1322" y1="212" x2="1368" y2="212" marker-end="url(#ah)"/>
+  <line class="ar" x1="1322" y1="362" x2="1368" y2="340" marker-end="url(#ah)"/>
+  <line class="ar" x1="1322" y1="497" x2="1368" y2="430" marker-end="url(#ah)"/>
+
+  <!-- 개선 루프 -->
+  <path class="ard" d="M1444,544 L1444,604 L830,604 L830,572" marker-end="url(#ahd)"/>
+  <text class="lbl" x="940" y="596">개선 루프: 임계값 조정 제안 (사용자 승인 시 위임장 갱신)</text>
+
+  <!-- ── 하단 고지 스트립 ── -->
+  <rect class="strip" x="40" y="660" width="1480" height="44" rx="10"/>
+  <text class="stript" x="780" y="688">위임장 3요건 = 전자서명 + 건별 통지 + 무조건 철회권 (전금법 거래지시 모의) · 환율은 예측이 아닌 사용자 Rule로만 집행 · 대출 승인은 JB 심사엔진의 배타적 권한, 에이전트는 안내와 가심사까지</text>
+</svg>
+</body>
+</html>
