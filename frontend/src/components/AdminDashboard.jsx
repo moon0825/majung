@@ -77,12 +77,12 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
     <div className="admin">
       {/* 아키텍처 제1원칙 + 평가 용어 파이프라인 */}
       <div className="principle-strip">
-        <b>송금 절차에서 LLM 배제 (할루시네이션에 따른 금융 사고 원천 차단)</b>
+        <b>검증·개선: 설명가능성과 책임소재 — 송금 절차에서 LLM 배제 (할루시네이션에 따른 금융 사고 원천 차단)</b>
         <div className="pipe">
           <span>수집 (급여·FX)</span><i>→</i>
           <span>판단 (Gate A 위임장 · Gate B Rule·FX · Gate C AML)</span><i>→</i>
           <span>행동 (집행/보류/차단)</span><i>→</i>
-          <span>검증·개선 (감사로그 · STR 큐)</span>
+          <span className="pipe-highlight">검증·개선 (감사로그 {audit.length}건 · STR 큐 {strQ.length}건 적재)</span>
         </div>
         <div className="admin-controls">
           <label>
@@ -170,12 +170,18 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
       </div>
 
       <div className="two-col">
-        {/* STR 후보 큐 */}
+        {/* STR 후보 큐 — JB 컴플라이언스 심사창구 톤 */}
         <div className="table-card">
-          <h4>STR 후보 대기열 <span className="cnt">특금법 연계: 의심 탐지가 자동 실행에 우선 · 사유는 점수 분해로 설명</span></h4>
+          <h4>STR 후보 대기열 <span className="cnt">JB 컴플라이언스 심사창구 · 의심 탐지가 자동 실행에 우선 · 사유는 점수 분해로 설명</span></h4>
           <table>
             <thead>
-              <tr><th>ID</th><th>AML 점수</th><th>보류 사유 (점수 분해)</th><th>상태</th><th>조치 (특금법 워크플로)</th></tr>
+              <tr>
+                <th>거래 ID</th>
+                <th>AML 점수</th>
+                <th>차단·보류 사유 (점수 분해)</th>
+                <th>상태</th>
+                <th>컴플라이언스 조치 (특금법 STR 워크플로)</th>
+              </tr>
             </thead>
             <tbody>
               {strQ.length === 0 ? (
@@ -189,14 +195,18 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
                 try { flags = JSON.parse(r.flags); } catch { flags = [String(r.flags)]; }
                 return (
                   <tr key={r.id}>
-                    <td className="mono" style={{ background: "none" }}>STR-{r.id}</td>
-                    <td><span className={`badge ${r.score >= 70 ? "block" : "hold"}`}>{r.score}</span></td>
+                    <td className="mono" style={{ background: "none", fontWeight: 600 }}>STR-{r.id}</td>
+                    <td>
+                      <span className={`badge ${r.score >= 70 ? "block" : "hold"}`} style={{ fontSize: 15, fontWeight: 700 }}>
+                        {r.score}점
+                      </span>
+                    </td>
                     <td>
                       <div className="flags">
                         {flags.map((f) => <span key={f} className="flag-chip">{flagKoWeighted(f)}</span>)}
                       </div>
                     </td>
-                    <td><span className="badge hold">{r.status}</span></td>
+                    <td><span className="badge hold">{r.status === "pending" ? "심사대기" : r.status}</span></td>
                     <td>
                       {strActions[r.id] ? (
                         <div className="str-done">
@@ -205,9 +215,9 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
                         </div>
                       ) : (
                         <div className="str-actions">
-                          <button onClick={() => actStr(r.id, "review")}>검토</button>
-                          <button onClick={() => actStr(r.id, "report")}>보고</button>
-                          <button onClick={() => actStr(r.id, "dismiss")}>기각</button>
+                          <button aria-label="STR 건 검토 시작" onClick={() => actStr(r.id, "review")}>검토</button>
+                          <button aria-label="FIU STR 보고" onClick={() => actStr(r.id, "report")}>FIU 보고</button>
+                          <button aria-label="정상 판정·기각" onClick={() => actStr(r.id, "dismiss")}>기각(정상)</button>
                         </div>
                       )}
                     </td>

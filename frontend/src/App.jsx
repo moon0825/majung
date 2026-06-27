@@ -162,6 +162,10 @@ export default function App() {
       if (!intent) intent = localIntent(msg);
 
       if (intent === "remit" || intent === "create_mandate") {
+        // LLM 의도파싱 안내 카드: 금액은 후보일 뿐, 게이트가 위임장으로 재검증 (표시 push만, 플로우 불변)
+        push({ kind: "bot",
+          vi: "🔍 Tôi đã phân tích yêu cầu của anh (NLP). Số tiền chỉ là đề xuất — cổng xác minh ủy quyền sẽ kiểm tra lại chính xác.",
+          ko: "🔍 발화에서 의도를 파싱했습니다. 금액은 후보값일 뿐입니다. 실제 한도·수취인·조건은 게이트가 위임장으로 재검증합니다." });
         push({ kind: "bot",
           vi: "Tôi đã soạn giấy ủy quyền theo yêu cầu của anh. Hãy đọc kỹ bằng tiếng Việt rồi ký nhé.",
           ko: "요청 내용으로 위임장 초안을 만들었어요. 모국어로 꼼꼼히 확인한 뒤 서명해 주세요." });

@@ -874,6 +874,96 @@ tr:last-child td { border-bottom: none; }
 .loop-text { font-size: 12px; color: var(--ink); line-height: 1.5; padding-top: 3px; }
 .loop-arrow { color: var(--ink-sub); font-size: 13px; margin: 3px 0 3px 28px; }
 
+/* ─── 파이프 강조 (검증·개선 적재 건수) ─── */
+.pipe-highlight {
+  background: rgba(255, 255, 255, 0.22) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+}
+
+/* ─── 검증·개선 루프 임계값 주의 문구 ─── */
+.loop-note {
+  display: block;
+  font-size: 11px;
+  color: var(--hold);
+  margin-top: 3px;
+  font-weight: 600;
+}
+
+/* ─── 수익기회 시나리오 토글 (전환율 민감도) ─── */
+.biz-scenario { padding: 2px 18px 12px; }
+.biz-scenario .ft { font-size: 12.5px; font-weight: 700; color: var(--ink-sub); margin-bottom: 10px; }
+.scenario-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+.scen-tab {
+  flex: 1;
+  padding: 7px 4px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 9px;
+  border: 1.5px solid var(--line);
+  background: #fafcfe;
+  color: var(--ink-sub);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.scen-tab.active {
+  background: var(--jb-light);
+  border-color: var(--jb-blue);
+  color: var(--jb-navy);
+}
+.scen-tab:hover:not(.active) { background: #f0f4f8; }
+.scenario-body { background: #f7fafc; border: 1px solid var(--line); border-radius: 10px; padding: 10px 13px; }
+.scen-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px dashed #dbe5ef;
+  font-size: 12px;
+  color: var(--ink);
+}
+.scen-row:last-of-type { border-bottom: none; }
+.scen-val { font-size: 13px; font-weight: 800; color: var(--jb-navy); }
+.scen-note { font-size: 10.5px; color: var(--ink-sub); margin-top: 8px; line-height: 1.5; }
+
+/* ─── 접근매체 배지 (무키 자동송금 카드 하단) ─── */
+.mandate-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 8px 0;
+}
+.mandate-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  background: #e9f1fb;
+  color: var(--jb-navy);
+  border: 1px solid #bcd4ec;
+  border-radius: 6px;
+  padding: 3px 8px;
+  letter-spacing: 0.1px;
+}
+
+/* ─── 대환 가심사 워터마크 배지 ─── */
+.refi-watermark {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 8px 10px;
+  background: #fff8e1;
+  border: 1px solid #f0d060;
+  border-radius: 9px;
+  margin-bottom: 10px;
+}
+.refi-wm-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7a5200;
+  background: rgba(240, 208, 96, 0.2);
+  border-radius: 5px;
+  padding: 2px 7px;
+}
+
 /* ─── 앱 푸터: 저장소·검증 표기 ─── */
 .appfoot {
   display: flex;
