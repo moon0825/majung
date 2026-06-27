@@ -1,5 +1,7 @@
 # 야간 진행 로그 (최신이 위)
 
+- 2026-06-27 · 새벽 루틴 지침 마감 · OVERNIGHT_ROUTINE 업데이트: 스케줄 KST 03:00, '할당량 소진까지' 예산, 아침 브리핑 단계(C-10) 추가, 루틴 프롬프트를 CLAUDE.md+검증라운드+브리핑 포함으로 강화. 사용자가 윈도우 앱에서 수동 세팅 예정. · 검증: 문서 · 다음: 본선 발표덱 v5(JB 비전·고속도로)
+
 - 2026-06-27 · ui-ux 플러그인 처리 · 보안 가드가 cascade(152개 제3자 모음) 마켓플레이스+ui-ux 자동활성화를 거부(무인 세션에 외부코드 자동로딩 리스크). 판단: ui-ux는 낮 데모용이라 새벽 루틴 자동로딩 불필요. settings.json은 harness만 자동활성 유지, ui-ux(waamengineer-ui-ux-pro-max-skill@cascade-content-creation-misc-1)는 CLAUDE.md에 '낮 수동 설치' 명령으로 문서화. · 검증: 문서 · 다음: JB 비전 발표덱 v5
 
 - 2026-06-27 · 플러그인 자동로딩 + CLAUDE.md 운영매뉴얼 · .claude/settings.json에 harness 마켓플레이스 선언(extraKnownMarketplaces + enabledPlugins, 클라우드 세션 시작 시 자동설치). CLAUDE.md 신설: 동결구역·에이전트팀 흐름·스킬·플러그인·화법·수치규율·하루 케이던스·문서 인덱스. ui-ux-pro-max는 소스 미확인이라 보류(사용자 소스 제공 시 한 줄 추가). · 검증: 설정·문서 · 다음: ui-ux 소스 받아 선언, JB 비전 발표덱 v5
