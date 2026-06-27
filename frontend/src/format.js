@@ -57,6 +57,37 @@ export const FLAG_KO = {
 };
 export const flagKo = (f) => FLAG_KO[f] || f;
 
+// AML 플래그 → 점수 가중치 (rules.py AML_WEIGHTS 미러, 표시 전용).
+// 컴플라이언스 화면에서 "보류 사유"를 점수 분해로 설명하기 위함. 판정 로직 불변.
+export const FLAG_WEIGHT = {
+  whitelisted: -40,
+  out_of_mandate: 30,
+  new_beneficiary: 25,
+  high_amount: 20,
+  late_night: 0,
+  structuring: 50,
+  just_below_threshold_repeat: 30,
+  blacklist_hardcut: 100,
+};
+// "위임 범위 밖 (+30)" 형태. 가산 0(late_night 등)·미정의는 이름만.
+export const flagKoWeighted = (f) => {
+  const w = FLAG_WEIGHT[f];
+  const name = flagKo(f);
+  if (w === undefined || w === 0) return name;
+  return `${name} (${w > 0 ? "+" : ""}${w})`;
+};
+
+// 감사로그 event_type → 한국어 라벨 (검증·개선: 설명 가능성)
+export const EVENT_KO = {
+  gate_a: "Gate A 위임검증",
+  gate_b: "Gate B Rule·FX",
+  gate_c: "Gate C AML",
+  execute: "송금 실행",
+  notify: "모국어 통지",
+  refer_to_jb_engine: "JB 심사엔진 회부",
+};
+export const eventKo = (e) => EVENT_KO[e] || e;
+
 export const GATE_NAME = { A: "위임장", B: "Rule·FX", C: "AML" };
 
 // 게이트 한 칸의 표시 텍스트/색 (outcome.gates 기반)

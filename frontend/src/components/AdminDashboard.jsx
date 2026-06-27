@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "../api.js";
 import * as D from "../demoData.js";
 import {
-  fmtKRW, fmtPct, gateCell, statusMeta, timeHMS,
+  eventKo, flagKoWeighted, fmtKRW, fmtPct, gateCell, statusMeta, timeHMS,
 } from "../format.js";
 import BusinessValuePanel from "./BusinessValuePanel.jsx";
 import EmptyState from "./EmptyState.jsx";
@@ -158,10 +158,10 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
       <div className="two-col">
         {/* STR 후보 큐 */}
         <div className="table-card">
-          <h4>STR 후보 대기열 <span className="cnt">AML 연계: 의심 탐지가 자동 실행에 우선</span></h4>
+          <h4>STR 후보 대기열 <span className="cnt">특금법 연계: 의심 탐지가 자동 실행에 우선 · 사유는 점수 분해로 설명</span></h4>
           <table>
             <thead>
-              <tr><th>ID</th><th>score</th><th>flags</th><th>상태</th></tr>
+              <tr><th>ID</th><th>AML 점수</th><th>보류 사유 (점수 분해)</th><th>상태</th></tr>
             </thead>
             <tbody>
               {strQ.length === 0 ? (
@@ -179,7 +179,7 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
                     <td><span className={`badge ${r.score >= 70 ? "block" : "hold"}`}>{r.score}</span></td>
                     <td>
                       <div className="flags">
-                        {flags.map((f) => <span key={f} className="flag-chip">{f}</span>)}
+                        {flags.map((f) => <span key={f} className="flag-chip">{flagKoWeighted(f)}</span>)}
                       </div>
                     </td>
                     <td><span className="badge hold">{r.status}</span></td>
@@ -201,7 +201,7 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
             ) : audit.map((l) => (
               <div className="audit-item" key={l.log_id}>
                 <span className="time">{(l.created_at || "").slice(11, 19) || "-"}</span>
-                <span className={`badge ${EVENT_CLS[l.event_type] || "navy"}`}>{l.event_type}</span>
+                <span className={`badge ${EVENT_CLS[l.event_type] || "navy"}`}>{eventKo(l.event_type)}</span>
                 <span className="payload">{payloadSummary(l.payload_json)}</span>
               </div>
             ))}

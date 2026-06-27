@@ -25,6 +25,9 @@ const GREETING = () => [
     vi: "Xin chào anh Minh! Tôi là Majung, trợ lý ngân hàng ủy quyền của anh.",
     ko: "안녕하세요, 민 님. 위임형 뱅킹 에이전트 '마중'입니다." },
   { id: nid(), kind: "bot",
+    vi: "Tôi biết anh đang gánh khoản vay 1.500 만원, lãi 30%/năm từ trước khi sang Hàn. Tôi giúp anh gửi tiền an toàn về nhà và từng bước giảm lãi khoản vay đó.",
+    ko: "입국 전 떠안으신 1,500만원·연 30% 사채를 알고 있어요. 안전한 송금과, 그 사채를 한 걸음씩 줄이는 일을 함께 도와드릴게요." },
+  { id: nid(), kind: "bot",
     vi: "Anh cần gì? Có thể nói bằng tiếng Việt.",
     ko: "무엇을 도와드릴까요? 베트남어로 말씀하셔도 됩니다." },
 ];
