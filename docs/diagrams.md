@@ -98,7 +98,53 @@ sequenceDiagram
 
 ---
 
-## 4. 핵심 기능 흐름 — 2막 대환 가심사 (§4)
+## 4. 접근매체 비보유 구조 — 전금법 제6조③ 대응
+
+> 마중은 접근매체(비번·OTP·인증서)를 받지도 보관하지도 않는다.
+> 실행 권한은 고객이 사전 등록한 오픈뱅킹/자동이체 권한이며, JB 결정적 코드가 그 위에서 실행한다.
+
+```mermaid
+flowchart LR
+    subgraph 고객["고객 (E-9 외국인)"]
+        Auth["본인인증 1회<br/>(오픈뱅킹·자동이체 사전등록)"]
+        Mandate["위임장 전자서명<br/>수취인·한도·조건·철회권 고정"]
+    end
+
+    subgraph 마중["마중 에이전트"]
+        direction TB
+        NoKey["❌ 접근매체 미보유<br/>(비번·OTP·인증서 없음)"]
+        GateCtrl["3중 게이트 통제<br/>(Gate A/B/C 결정적 코드)"]
+    end
+
+    subgraph JB["JB 코어뱅킹"]
+        Exec["실행<br/>(자동이체/오픈뱅킹 권한으로)"]
+    end
+
+    Auth --> Mandate
+    Mandate --> GateCtrl
+    NoKey -.보유 없음.-> GateCtrl
+    GateCtrl -->|PASS 후에만| Exec
+
+    note1["대법원 2011도16167:<br/>'양도'=배타적 이전.<br/>마중은 이전·대여 없음 → 해당 안 됨"]
+    style note1 fill:#fff8e1,stroke:#f59e0b
+```
+
+---
+
+## 5. AP2 ↔ 마중 3중 게이트 정합
+
+> Google AP2(Agent Payments Protocol) 3중 Mandate와 마중 3중 게이트는 1:1 대응한다.
+> 마중은 임의 설계가 아니라 업계가 수렴 중인 위임형 결제 거버넌스를 구현했다.
+
+| AP2 Mandate | 마중 게이트 | 역할 |
+|---|---|---|
+| Intent Mandate — 에이전트 의도 인증 | Gate A — 위임장 검증(전자서명·범위·철회) | 고객 의사 고정 |
+| Cart Mandate — 거래 내용 승인 | Gate B — Rule 한도·조건(FX Rule·금액·기간) | 조건 충족 판단 |
+| Payment Mandate — 실행 인가 | Gate C — 화이트리스트 + AML | 수취인·리스크 차단 |
+
+---
+
+## 6. 핵심 기능 흐름 — 2막 대환 가심사 (§4)
 
 ```mermaid
 sequenceDiagram
