@@ -29,7 +29,10 @@
 
 ## 4. 플러그인
 - **harness** (`/plugin`, 레포 settings.json에 선언됨) — 도메인 설명으로 에이전트 팀과 스킬을 생성하는 공장이다. 팀을 새로 뽑거나 갈아엎을 때만 쓴다("하네스 구성해줘"). 한번 생성된 팀은 harness 없이도 돈다. 7/3 이후엔 새 에이전트 생성을 멈춘다.
-- **ui-ux-pro-max** (선언 예정) — 프론트 데모 화면을 다듬을 때 쓴다. 사람이 보면서 쓰는 낮 작업용. demo-qa가 잡은 표시 문제를 고칠 때 참고한다. *(마켓플레이스 소스 확인 후 settings.json에 추가)*
+- **ui-ux-pro-max** (플러그인 `waamengineer-ui-ux-pro-max-skill`, 마켓플레이스 `cascade-content-creation-misc-1`) — 프론트 데모 화면을 다듬는 낮 작업용 디자인 스킬(50+ 스타일, 21 팔레트, 폰트 페어링, 차트 템플릿). **새벽 루틴에는 자동 로딩하지 않는다.** 무인 세션에 외부 코드를 얹을 필요가 없고 비용·리스크만 는다. 낮에 데모를 손볼 때 사람이 직접 켠다.
+  - `/plugin marketplace add joshuarweaver/cascade-content-creation-misc-1`
+  - `/plugin install waamengineer-ui-ux-pro-max-skill@cascade-content-creation-misc-1`
+  - demo-qa가 잡은 표시 문제를 고칠 때 이 스킬로 다듬는다.
 
 ## 5. 화법 (docs/화법_가이드.md)
 모든 대본·문서는 이 화법으로 쓴다.

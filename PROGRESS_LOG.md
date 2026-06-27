@@ -1,5 +1,7 @@
 # 야간 진행 로그 (최신이 위)
 
+- 2026-06-27 · ui-ux 플러그인 처리 · 보안 가드가 cascade(152개 제3자 모음) 마켓플레이스+ui-ux 자동활성화를 거부(무인 세션에 외부코드 자동로딩 리스크). 판단: ui-ux는 낮 데모용이라 새벽 루틴 자동로딩 불필요. settings.json은 harness만 자동활성 유지, ui-ux(waamengineer-ui-ux-pro-max-skill@cascade-content-creation-misc-1)는 CLAUDE.md에 '낮 수동 설치' 명령으로 문서화. · 검증: 문서 · 다음: JB 비전 발표덱 v5
+
 - 2026-06-27 · 플러그인 자동로딩 + CLAUDE.md 운영매뉴얼 · .claude/settings.json에 harness 마켓플레이스 선언(extraKnownMarketplaces + enabledPlugins, 클라우드 세션 시작 시 자동설치). CLAUDE.md 신설: 동결구역·에이전트팀 흐름·스킬·플러그인·화법·수치규율·하루 케이던스·문서 인덱스. ui-ux-pro-max는 소스 미확인이라 보류(사용자 소스 제공 시 한 줄 추가). · 검증: 설정·문서 · 다음: ui-ux 소스 받아 선언, JB 비전 발표덱 v5
 
 - 2026-06-27 · 본선 에이전트 팀을 레포에 직접 구축(클라우드/새벽 루틴용) · harness 적용안대로 .claude/agents/ 6개 작성: finals-orchestrator(리더)·number-auditor·regulation-defender·demo-qa·pitch-scriptwriter·korean-stylist. 윤문은 humanize-korean 재사용. 동결 규칙·권한 최소(검증관 읽기, 수치는 number-auditor만)·7/3 동결을 각 에이전트에 박음. OVERNIGHT_ROUTINE에 '검증·개선 라운드(새벽 1회)' 9단계 추가. 커밋되어 컴퓨터 없이 클라우드 루틴이 팀을 사용. · 검증: 문서·에이전트 정의(코드 불변) · 다음: harness/ui-ux 플러그인을 settings.json에 선언(선택), 팀 드라이런
