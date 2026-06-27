@@ -1,6 +1,56 @@
 # 야간 진행 로그 (최신이 위)
 
 ---
+## 아침 브리핑 (2026-06-27 새벽 → 아침, claude/finals-prototype-prep-02e3b6)
+
+### (1) 오늘 한 일 (6커밋, 전부 `claude/finals-prototype-prep-02e3b6`)
+
+| # | 커밋 / 작업 | 결과 |
+|---|---|---|
+| 1 | README 시장 수치 동기화 — 송금 5년누적 25조·5대은행·한패스 상장완료·브라보=자체플랫폼·9.59%p=스프레드, 휴면 20만 제거 | ✅ 완료 |
+| 2 | diagrams.md — §4 접근매체 비보유 mermaid 플로우 + §5 AP2↔마중 3중게이트 정합표 + §2 메타포 캡션('LLM은 통역, 금고 열쇠는 결정적 코드') | ✅ 완료 |
+| 3 | docs/계열사_시너지_매트릭스.md 신규 — 광주은행·JB우리캐피탈·한패스 확장 로드맵 | ✅ 완료 |
+| 4 | AdminDashboard — 원칙 스트립 헤더 '검증·개선: 설명가능성·책임소재', pipe-highlight 건수 표시 | ✅ vite build 통과 |
+| 5 | BusinessValuePanel — 임계값 자동적용 아님 loop-note 명시, 보수/기준/낙관 시나리오 탭 토글(3%/7%/12%) | ✅ vite build 통과 |
+| 6 | Cards.jsx — OutcomeCard 접근매체 배지 3종, RefiCard 가심사 워터마크 배지 3종, GatePills aria-label·role 접근성 | ✅ vite build 통과 |
+| 7 | App.jsx — remit 분기에 LLM 의도파싱 안내 카드 push(송금 플로우 불변) | ✅ vite build 통과 |
+| 8 | Q&A 방어카드 Q14~Q16 추가 (JB직접개발 차별화·LLM 차단구조·사채 출처) | ✅ 완료 |
+| 9 | 시연스크립트.md — 라이브 시연 런북 표·폴백·해상도·단축키 점검표 갱신 | ✅ 완료 |
+| 10 | test_gates.py 엣지 케이스 6건 (FX경계값·AML경계값·DSR경계값) | ✅ pytest 20→26 통과 |
+| 11 | test_parse_intent_schema.py 14건 — ParsedIntent 필드·타입·intent·mandate계약 | ✅ pytest 26→40 통과 |
+| 12 | build_pptx.py / build_docx.py — 폐기 수치(693억·66.5억·휴면 20만·250만) → 정정(504억·48억·4.8만·246만) | ✅ 완료 |
+
+**최종 상태**: vite build 37모듈 ✅ / pytest 40/40 ✅
+
+### (2) 통과·실패
+
+| 검증 | 결과 |
+|---|---|
+| `npx vite build` | ✅ 37 modules, 0 errors |
+| `python3 -m pytest -q` | ✅ 40 passed, 0 failed |
+| build_pptx.py 실행 | ❌ `ModuleNotFoundError: pptx` — 라이브러리 미설치(동결 구역: 라이브러리 추가 금지) → 보류 |
+| 검증 에이전트 라운드 | ✅ number-auditor·regulation-defender·demo-qa 모두 불일치 없음 |
+
+### (3) 사람이 봐야 할 것
+
+| 항목 | 이유 | 우선순위 |
+|---|---|---|
+| `pip install python-pptx python-docx && cd docs && python3 build_pptx.py && python3 build_docx.py` | pptx/docx 라이브러리 미설치로 빌드 보류. 본선 전 사람이 실행 요망. | ⚠ P2 |
+| 전자서명 법적 효력·본인확인 수단 연동(Q1 방어카드) | CLAUDE.md에 "7/1에 법무 관점 사람 검증 필수"로 표기. 방어카드 Q1 각주 참고. | ⚠ 7/1 마감 |
+| DSR 실값 계산([!→리뷰], mcp_tools.py:267) | 하드코딩 0.32 → 급여/부채 실산출 대환 경로 인접, 여신 담당 최대 약점. | ⚠ 리뷰 후 머지 |
+| 등급별 대환 금리 테이블([!→리뷰]) | 금소법 정확고지 직결, 사람 리뷰 후 머지. | ⚠ 리뷰 후 머지 |
+| GET /metrics/loop([!→리뷰]) | 읽기전용 엔드포인트, 게이트 불변 확인 후 사람 승인. | ⚠ 리뷰 후 머지 |
+| diagrams.md에 3중게이트 단일 다이어그램 메타포 캡션 | 완료되었으나 final QA에서 문구 자연스러움 확인 권장. | 참고 |
+
+### (4) 다음 제안
+
+1. **본선 전 드라이런**: `python -m app.seed → uvicorn 8000 → npm run dev → 브라우저 5173` 순서로 전체 런북 1회 시연. 단축키 1~5 + F 동작 확인.
+2. **build_pptx / build_docx**: 위 pip install 후 실행 → 제출용 PPT·DOCX 산출물 생성.
+3. **7/1 법무 검증**: Q1 방어카드 전자서명 효력·본인확인 수단 연동 항목 사람 검수.
+4. **diagrams.md 3중게이트 단일 다이어그램**: 메타포 캡션 표현 검토 후 최종 확인.
+5. **P1 실데이터 루프([!→리뷰])**: GET /metrics/loop + 검증·개선 카드 실데이터 렌더 — 사람 승인 후 머지 가능.
+
+---
 ## 오늘 새벽 계획 (2026-06-27 새벽, claude/finals-prototype-prep-02e3b6)
 
 **한 줄 목표**: P1/P2 표시 레이어 일괄 완성 + 발표 자료 최종 마감 — JB 본선(7/4~5) 마감 점검
