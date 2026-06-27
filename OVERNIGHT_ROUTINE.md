@@ -61,6 +61,7 @@
 6. 백로그 항목 `- [ ]` → `- [x]`, 커밋: `git add -A && git commit -m "nightly: <항목 요약>"`
 7. 푸시: `git push -u origin claude/finals-prototype-prep-02e3b6`
 8. **정지 조건 전까지 2~7 반복** — 이 루틴은 1~2건이 아니라 **그날 처리 가능한 저위험 항목을 가능한 한 많이** 전진시킨다(아래 예산 참조).
+9. **본선 검증·개선 라운드(에이전트 팀, 새벽 1회).** 백로그 전진이 끝나면 finals-orchestrator 절차를 따라 팀을 한 번 돌린다. number-auditor·regulation-defender·demo-qa를 병렬로(읽기 전용) 돌려 docs의 수치·규제·데모를 검증하고, 불일치를 pitch-scriptwriter가 `_workspace/`에 반영, korean-stylist가 윤문(humanize-korean, 최대 2회)한다. 윤문 뒤 number-auditor 1패스로 수치가 안 깨졌는지 확인. 리포트는 `_workspace/`에 날짜별로 쌓고 결과를 PROGRESS_LOG에 한 줄. **검증 에이전트는 읽기만 하므로 송금 실행 경로를 건드리지 않는다.** 에이전트 정의는 `.claude/agents/`. 팀 모드(SendMessage)가 꺼져 있으면 서브에이전트(Task)로 순차 실행해도 된다.
 
 ## D. 정지 조건
 - 빌드 또는 테스트가 **2회 연속** 실패

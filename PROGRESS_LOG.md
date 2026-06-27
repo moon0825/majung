@@ -1,5 +1,7 @@
 # 야간 진행 로그 (최신이 위)
 
+- 2026-06-27 · 본선 에이전트 팀을 레포에 직접 구축(클라우드/새벽 루틴용) · harness 적용안대로 .claude/agents/ 6개 작성: finals-orchestrator(리더)·number-auditor·regulation-defender·demo-qa·pitch-scriptwriter·korean-stylist. 윤문은 humanize-korean 재사용. 동결 규칙·권한 최소(검증관 읽기, 수치는 number-auditor만)·7/3 동결을 각 에이전트에 박음. OVERNIGHT_ROUTINE에 '검증·개선 라운드(새벽 1회)' 9단계 추가. 커밋되어 컴퓨터 없이 클라우드 루틴이 팀을 사용. · 검증: 문서·에이전트 정의(코드 불변) · 다음: harness/ui-ux 플러그인을 settings.json에 선언(선택), 팀 드라이런
+
 - 2026-06-27 · harness 적용안 조사·문서화 · revfactory/harness(팀 아키텍처 팩토리, Apache-2.0) 6각도 워크플로 후 docs/harness_적용안.md 작성. 추천=Fan-out/Fan-in+Producer-Reviewer 하이브리드, 에이전트 6(finals-orchestrator·pitch-scriptwriter·number-auditor·regulation-defender·demo-qa·korean-stylist)+스킬 3(윤문은 humanize-korean 재사용). 새벽 루틴에 검증팀 1라운드 추가하는 지속개선 루프 설계. 설치·도메인프롬프트·검증체크·리스크 포함. · 검증: 문서만 · 다음: 사람이 /plugin 설치 후 '하네스 구성해줘'(동결규칙 박은 프롬프트)
 
 - 2026-06-27 · 화법 가이드 정립(번역투·AI 문어체 제거) · 9각도 워크플로로 조사 후 docs/화법_가이드.md 작성(원칙7·금지패턴16·before→after16·낭독 체크리스트·기준 오프닝). 진단: AI 번역투=영어 골격에 한국어 단어. 처방=사람 주어, 명사→동사, 발표 설명 말고 장면 시작. 발표덱 오프닝·클로징을 이 화법으로 교체(em dash·번역투 제거, 새벽2시 장면+콜백). 앞으로 모든 대본·문서 이 화법 적용. · 검증: 문서만 · 다음: JB 비전 깔고 마중=고속도로 구조로 발표덱 v5 재편(이 화법으로)
