@@ -468,6 +468,13 @@ export default function App() {
           <AdminDashboard traces={traces} mandate={mandate} healthy={healthy} active={tab === "admin"} />
         </section>
       </main>
+      <footer className="appfoot">
+        <span>마중 (Majung) · JB Fin AI Challenge MVP</span>
+        <span className="sep">·</span>
+        <span>자동 테스트 20/20 · 5단계 e2e</span>
+        <span className="sep">·</span>
+        <a href="https://github.com/moon0825/majung" target="_blank" rel="noreferrer">github.com/moon0825/majung</a>
+      </footer>
     </div>
   );
 }

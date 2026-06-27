@@ -15,8 +15,9 @@ SRC = Path(r"D:\JB_Fin_AI\JB_AI Challenge\majung\docs\captures_src")
 OUT = Path(r"D:\JB_Fin_AI\JB_AI Challenge\majung\docs\captures")
 
 TARGETS = [
-    ("usecase.html", "usecase.png", 1500, 1090),
-    ("architecture.html", "architecture.png", 1560, 750),
+    ("usecase.html", "usecase.png", 1600, 1160),
+    ("architecture.html", "architecture.png", 1660, 812),
+    ("flow.html", "flow.png", 1560, 990),
 ]
 
 
@@ -37,7 +38,7 @@ def main():
         for html, png, w, h in TARGETS:
             ctx = browser.new_context(
                 viewport={"width": w + 20, "height": h + 20},
-                device_scale_factor=2,
+                device_scale_factor=1,
             )
             page = ctx.new_page()
             page.goto((SRC / html).as_uri())

@@ -6,6 +6,19 @@ export const fmtVND = (n) => (n == null ? "-" : `${Math.round(n).toLocaleString(
 export const fmtAPR = (r) => (r == null ? "-" : `연 ${(r * 100).toFixed(2)}%`);
 export const fmtPct = (x, d = 2) => (x == null ? "-" : `${x >= 0 ? "+" : ""}${Number(x).toFixed(d)}%`);
 
+// 큰 금액 한국어 축약(사업가치 콘솔 전용). 1억 이상은 "억 원", 1만 이상은 "만 원".
+export const fmtEok = (n) => {
+  if (n == null) return "-";
+  const v = Number(n);
+  if (Math.abs(v) >= 1e8) {
+    const eok = v / 1e8;
+    const s = Number.isInteger(eok) ? eok.toLocaleString("ko-KR") : eok.toFixed(1);
+    return `${s}억 원`;
+  }
+  if (Math.abs(v) >= 1e4) return `${Math.round(v / 1e4).toLocaleString("ko-KR")}만 원`;
+  return `${v.toLocaleString("ko-KR")}원`;
+};
+
 export const timeHM = (date = new Date()) => {
   const p = (n) => String(n).padStart(2, "0");
   return `${p(date.getHours())}:${p(date.getMinutes())}`;

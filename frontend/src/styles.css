@@ -687,3 +687,190 @@ tr:last-child td { border-bottom: none; }
   .panel { transition: none; }
   .chat { scroll-behavior: auto; }
 }
+
+/* ───────────────────────────────────────────────────────────────
+   상용화 보강 (추가 전용). 기존 규칙은 건드리지 않고 후순위로 덮어쓴다.
+   게이트 로직·레이아웃 구조 불변, 시각 깊이·위계·빈 상태·사업가치 면만 강화.
+   ─────────────────────────────────────────────────────────────── */
+:root {
+  --elev-1: 0 1px 2px rgba(21, 39, 59, 0.06), 0 1px 3px rgba(21, 39, 59, 0.04);
+  --elev-2: 0 2px 8px rgba(21, 39, 59, 0.08), 0 4px 16px rgba(21, 39, 59, 0.05);
+  --elev-3: 0 10px 30px rgba(21, 39, 59, 0.16), 0 2px 8px rgba(21, 39, 59, 0.08);
+  --ring-focus: 0 0 0 3px rgba(46, 117, 182, 0.3);
+}
+
+/* 깊이 위계: 카드는 얕게, 패널·표는 한 단 띄우고, 폰은 가장 높게 */
+.stat-card, .table-card, .panel { box-shadow: var(--elev-2); }
+.phone { box-shadow: var(--elev-3), inset 0 0 0 2px #2a3850; }
+
+/* 키보드 포커스 가시화(상용 제품 기본기, 현재 부재) */
+.btn:focus-visible, .chip:focus-visible, .tab:focus-visible,
+.step-btn:focus-visible, .chat-input input:focus-visible,
+.admin-controls button:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+
+/* 큰 숫자 음수 자간: 헐거움 제거, 더 단단하게 */
+.amount-big, .m-balance, .stat-card .big { letter-spacing: -0.4px; }
+
+/* 버튼 누름 피드백 */
+.btn { transition: transform 0.1s ease, background 0.15s ease; }
+.btn:active:not(:disabled) { transform: translateY(1px) scale(0.99); }
+.chip { transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease; }
+.chip:hover { transform: translateY(-1px); box-shadow: var(--elev-1); }
+
+/* 로딩 스켈레톤 */
+.skeleton {
+  display: inline-block;
+  background: linear-gradient(90deg, #eef2f7 25%, #f7fafc 37%, #eef2f7 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 8px;
+}
+@keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+
+/* 빈 상태 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 30px 18px;
+  text-align: center;
+}
+.empty-state .es-ico { width: 30px; height: 30px; color: #9fb4c8; opacity: 0.55; }
+.empty-state .es-title { font-size: 13px; font-weight: 700; color: var(--ink); }
+.empty-state .es-sub { font-size: 11.5px; color: var(--ink-sub); line-height: 1.55; max-width: 330px; }
+
+/* ─── 사업가치 콘솔 (관리자 전용, 한국어 단일) ─── */
+.biz-panel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--elev-2);
+  overflow: hidden;
+}
+.biz-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 15px 18px 0; }
+.biz-head h4 { margin: 0; font-size: 15px; color: var(--jb-navy); }
+.biz-head .biz-sub { font-size: 11.5px; color: var(--ink-sub); }
+.biz-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 14px 18px; }
+.biz-kpi {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, #fafcfe, #fff);
+}
+.biz-kpi .k { font-size: 11.5px; color: var(--ink-sub); font-weight: 700; letter-spacing: 0.2px; }
+.biz-kpi .v { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; margin-top: 6px; color: var(--ink); }
+.biz-kpi .v small { font-size: 12px; font-weight: 700; color: var(--ink-sub); }
+.biz-kpi .d { font-size: 11px; color: var(--ink-sub); margin-top: 4px; line-height: 1.4; }
+.biz-kpi.accent { border-color: #bcd4ec; background: linear-gradient(180deg, var(--jb-light), #fff); }
+.biz-kpi.accent .v { color: var(--jb-navy); }
+
+.biz-funnel { padding: 2px 18px 12px; }
+.biz-funnel .ft { font-size: 12.5px; font-weight: 700; color: var(--ink-sub); margin-bottom: 10px; }
+.funnel-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.funnel-row .fl {
+  width: 132px;
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.funnel-track { flex: 1; height: 26px; background: #eef3f8; border-radius: 7px; overflow: hidden; }
+.funnel-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--jb-blue), var(--jb-navy));
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 9px;
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+  min-width: 38px;
+  white-space: nowrap;
+}
+.funnel-row.locked .funnel-fill { background: linear-gradient(90deg, #8194a9, #5d7186); }
+.funnel-lock { font-size: 10.5px; opacity: 0.7; }
+.biz-foot {
+  font-size: 10.5px;
+  color: var(--ink-sub);
+  line-height: 1.6;
+  margin: 0 18px 14px;
+  padding-top: 11px;
+  border-top: 1px dashed var(--line);
+}
+
+@media (max-width: 1100px) {
+  .biz-kpis { grid-template-columns: 1fr 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+  .btn, .chip { transition: none; }
+}
+
+/* ─── 사업가치 콘솔 보강: 전환엔진 태그, 출처 토글, 검증·개선 루프 ─── */
+.biz-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--jb-navy);
+  background: var(--jb-light);
+  border: 1px solid #bcd4ec;
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+.biz-src { margin: 0 18px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fafcfe; }
+.biz-src > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 9px 13px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--jb-navy);
+}
+.biz-src > summary::-webkit-details-marker { display: none; }
+.biz-src > summary::before { content: "▸ "; color: var(--ink-sub); }
+.biz-src[open] > summary::before { content: "▾ "; }
+.biz-src-body { padding: 0 14px 12px; font-size: 11.5px; color: var(--ink-sub); line-height: 1.6; }
+.biz-src-body ul { margin: 6px 0 8px; padding-left: 18px; }
+.biz-src-body li { margin-bottom: 3px; }
+.biz-src-body b { color: var(--ink); }
+.biz-src-note { color: var(--c-block, #c0392b); font-weight: 600; }
+
+.biz-loop { padding: 2px 18px 12px; }
+.biz-loop .ft { font-size: 12.5px; font-weight: 700; color: var(--ink-sub); margin-bottom: 10px; }
+.loop-row { display: flex; align-items: flex-start; gap: 10px; }
+.loop-step {
+  flex-shrink: 0;
+  width: 64px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 4px 0;
+  color: #fff;
+}
+.loop-step.act { background: var(--jb-blue, #2e75b6); }
+.loop-step.ver { background: #1a7f37; }
+.loop-step.imp { background: #9a6700; }
+.loop-text { font-size: 12px; color: var(--ink); line-height: 1.5; padding-top: 3px; }
+.loop-arrow { color: var(--ink-sub); font-size: 13px; margin: 3px 0 3px 28px; }
+
+/* ─── 앱 푸터: 저장소·검증 표기 ─── */
+.appfoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  font-size: 11.5px;
+  color: var(--ink-sub);
+  border-top: 1px solid var(--line);
+}
+.appfoot a { color: var(--jb-navy); font-weight: 600; text-decoration: none; }
+.appfoot a:hover { text-decoration: underline; }
+.appfoot .sep { opacity: 0.4; }

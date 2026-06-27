@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>마중 주요 기능 흐름도</title>
+<style>
+  body { margin: 0; background: #fff; }
+  svg { display: block; font-family: "Malgun Gothic", "Segoe UI", sans-serif; }
+  .ttl    { font-size: 28px; font-weight: 700; fill: #0E2841; }
+  .sub    { font-size: 17px; fill: #16324a; }
+  .track  { font-size: 19px; font-weight: 700; fill: #fff; text-anchor: middle; }
+  .track1 { fill: #2178BA; } .track2 { fill: #0E2841; }
+  .box    { fill: #fff; stroke: #8aa6c4; stroke-width: 1.6; }
+  .boxh   { font-size: 19px; font-weight: 700; fill: #0E2841; }
+  .boxs   { font-size: 16.5px; fill: #16324a; }
+  .start  { fill: #deebf7; stroke: #2178BA; stroke-width: 1.8; }
+  .starth { font-size: 19px; font-weight: 700; fill: #2178BA; }
+  .gatec  { fill: #eef5fc; stroke: #2178BA; stroke-width: 2.2; }
+  .gateh  { font-size: 20px; font-weight: 700; fill: #2178BA; text-anchor: middle; }
+  .gate   { fill: #fff; stroke: #2178BA; stroke-width: 1.6; }
+  .gatebh { font-size: 17.5px; font-weight: 700; fill: #2178BA; }
+  .dia    { fill: #fff7e6; stroke: #9a6700; stroke-width: 2; }
+  .diah   { font-size: 19px; font-weight: 700; fill: #875b00; text-anchor: middle; }
+  .ok     { fill: #e6f4ea; stroke: #1a7f37; stroke-width: 1.9; }
+  .okh    { font-size: 18.5px; font-weight: 700; fill: #146c2e; }
+  .hd     { fill: #fff4d6; stroke: #9a6700; stroke-width: 1.9; }
+  .hdh    { font-size: 18.5px; font-weight: 700; fill: #875b00; }
+  .bk     { fill: #fbeae8; stroke: #c0392b; stroke-width: 1.9; }
+  .bkh    { font-size: 18.5px; font-weight: 700; fill: #a3301f; }
+  .post   { fill: #fff; stroke: #0E2841; stroke-width: 1.9; }
+  .posth  { font-size: 18.5px; font-weight: 700; fill: #0E2841; }
+  .ln2    { fill: #fff; stroke: #2178BA; stroke-width: 1.8; }
+  .ln2h   { font-size: 18.5px; font-weight: 700; fill: #2178BA; }
+  .jb     { fill: #0E2841; stroke: #0E2841; stroke-width: 1.9; }
+  .jbh    { font-size: 18.5px; font-weight: 700; fill: #fff; }
+  .jbs    { font-size: 16.5px; fill: #e3ebf3; }
+  .ar     { stroke: #44607e; stroke-width: 1.8; fill: none; }
+  .lbl    { font-size: 16px; font-weight: 700; fill: #16324a; }
+  .lblok  { fill: #146c2e; } .lblhd { fill: #875b00; } .lblbk { fill: #a3301f; }
+  .strip  { fill: #deebf7; }
+  .stript { font-size: 17px; font-weight: 700; fill: #0E2841; text-anchor: middle; }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1560 990" width="1560" height="990" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#44607e"/>
+    </marker>
+  </defs>
+
+  <!-- 제목 -->
+  <text class="ttl" x="40" y="48">마중 주요 기능 흐름도: 한 건의 위임 송금 처리</text>
+  <text class="sub" x="40" y="78">송금 실행은 LLM이 아니라 정해진 규칙대로만 작동하는 규칙 기반 코드가 처리하며, 게이트 판정과 실행 권한은 코드에 있음</text>
+
+  <!-- ================= 1단계 위임 송금 트랙 ================= -->
+  <rect class="track track1" x="40" y="104" width="240" height="34" rx="8"/>
+  <text class="track" x="160" y="127">1단계 위임 송금</text>
+
+  <!-- [시작] 위임장 설정 -->
+  <rect class="start" x="40" y="166" width="300" height="124" rx="38"/>
+  <text class="starth" x="62" y="200">시작: 위임장 설정</text>
+  <text class="boxs"   x="62" y="226">모국어 요청으로 위임 조건 등록</text>
+  <text class="boxs"   x="62" y="250">전자서명, 건별 통지,</text>
+  <text class="boxs"   x="62" y="272">무조건 철회권 포함</text>
+
+  <!-- 급여 입금 감지 -->
+  <rect class="box" x="396" y="166" width="300" height="124" rx="10"/>
+  <text class="boxh" x="418" y="200">급여 입금 감지</text>
+  <text class="boxs" x="418" y="226">모의 뱅킹 코어가 입금 포착</text>
+  <text class="boxs" x="418" y="250">+210만원 입금 시</text>
+  <text class="boxs" x="418" y="272">위임 송금 절차 자동 작동</text>
+
+  <line class="ar" x1="340" y1="228" x2="396" y2="228" marker-end="url(#ah)"/>
+
+  <!-- 3중 게이트 판정 컨테이너 -->
+  <rect class="gatec" x="752" y="166" width="430" height="350" rx="14"/>
+  <text class="gateh" x="967" y="196">3중 게이트 판정 (전부 규칙 기반 코드)</text>
+
+  <rect class="gate" x="772" y="216" width="390" height="84" rx="10"/>
+  <text class="gatebh" x="792" y="244">게이트 A: 위임장 검증</text>
+  <text class="boxs"   x="792" y="270">전자서명, 유효기간, 철회 여부,</text>
+  <text class="boxs"   x="792" y="290">위임 범위를 JSON 데이터 양식으로 대조</text>
+
+  <rect class="gate" x="772" y="316" width="390" height="84" rx="10"/>
+  <text class="gatebh" x="792" y="344">게이트 B: 한도와 환율 조건</text>
+  <text class="boxs"   x="792" y="370">1회 200만원 한도 점검,</text>
+  <text class="boxs"   x="792" y="390">7일평균 대비 1% 이상 조건 확인</text>
+
+  <rect class="gate" x="772" y="416" width="390" height="84" rx="10"/>
+  <text class="gatebh" x="792" y="444">게이트 C: 수취인과 AML</text>
+  <text class="boxs"   x="792" y="470">사기 차단 명단 즉시 차단,</text>
+  <text class="boxs"   x="792" y="490">위험 점수 임계치 40과 70 적용</text>
+
+  <line class="ar" x1="967" y1="300" x2="967" y2="316" marker-end="url(#ah)"/>
+  <line class="ar" x1="967" y1="400" x2="967" y2="416" marker-end="url(#ah)"/>
+
+  <line class="ar" x1="696" y1="228" x2="752" y2="258" marker-end="url(#ah)"/>
+
+  <!-- ================= 판정 분기 (마름모) ================= -->
+  <!-- 분기 마름모: 게이트 종합 판정 -->
+  <polygon class="dia" points="1310,300 1430,380 1310,460 1190,380"/>
+  <text class="diah" x="1310" y="370">게이트</text>
+  <text class="diah" x="1310" y="396">종합 판정</text>
+
+  <line class="ar" x1="1182" y1="380" x2="1190" y2="380" marker-end="url(#ah)"/>
+
+  <!-- ================= 분기 결과 박스 (다음 행) ================= -->
+  <!-- 통과 -->
+  <rect class="ok" x="40" y="566" width="380" height="148" rx="10"/>
+  <text class="okh" x="62" y="598">통과: 자동 송금 실행</text>
+  <text class="boxs" x="62" y="626">한패스 인가 송금망으로 실행</text>
+  <text class="boxs" x="62" y="650">거래번호 발급, 잔액 즉시 반영</text>
+  <text class="boxs" x="62" y="674">건별 모국어 통지 발송</text>
+  <text class="boxs" x="62" y="698">화면에 [철회] 버튼 노출</text>
+
+  <!-- 보류 -->
+  <rect class="hd" x="460" y="566" width="380" height="148" rx="10"/>
+  <text class="hdh" x="482" y="598">보류: 모국어 재확인</text>
+  <text class="boxs" x="482" y="626">"정말 보내려는 분이 맞습니까"</text>
+  <text class="boxs" x="482" y="650">사람 확인 전에는 실행 안 함</text>
+  <text class="boxs" x="482" y="674">위험 점수 70 이상이면</text>
+  <text class="boxs" x="482" y="698">STR 후보 큐에 등록</text>
+
+  <!-- 차단 -->
+  <rect class="bk" x="880" y="566" width="380" height="148" rx="10"/>
+  <text class="bkh" x="902" y="598">차단: 사기 패턴 즉시 차단</text>
+  <text class="boxs" x="902" y="626">사기 차단 명단 수취인 판정</text>
+  <text class="boxs" x="902" y="650">OTP나 선입금 요구 패턴 적발</text>
+  <text class="boxs" x="902" y="674">재시도 불가 처리</text>
+  <text class="boxs" x="902" y="698">고객에게 경고 통지 발송</text>
+
+  <!-- 분기 화살표 (마름모 -> 결과) -->
+  <path class="ar" d="M1290,420 L1290,540 L230,540 L230,566" marker-end="url(#ah)"/>
+  <text class="lbl lblok" x="244" y="558">통과</text>
+  <path class="ar" d="M1310,460 L1310,548 L650,548 L650,566" marker-end="url(#ah)"/>
+  <text class="lbl lblhd" x="664" y="558">보류</text>
+  <path class="ar" d="M1330,430 L1330,556 L1070,556 L1070,566" marker-end="url(#ah)"/>
+  <text class="lbl lblbk" x="1084" y="558">차단</text>
+
+  <!-- ================= 사후 처리 ================= -->
+  <rect class="post" x="1300" y="566" width="220" height="148" rx="10"/>
+  <text class="posth" x="1320" y="598">사후 처리</text>
+  <text class="boxs"  x="1320" y="626">전 게이트 판정을</text>
+  <text class="boxs"  x="1320" y="648">감사로그에 기록</text>
+  <text class="boxs"  x="1320" y="676">위임 한도 조정 제안,</text>
+  <text class="boxs"  x="1320" y="698">사용자 승인 시 반영</text>
+
+  <line class="ar" x1="420" y1="640" x2="460" y2="640" marker-end="url(#ah)"/>
+  <line class="ar" x1="1260" y1="640" x2="1300" y2="640" marker-end="url(#ah)"/>
+
+  <!-- 보류 -> 사후 (큐 등록 후에도 로그 기록) 점선 생략, 통과->사후 흐름은 위 화살표로 표현 -->
+
+  <!-- ================= 2단계 사채 대환 트랙 ================= -->
+  <rect class="track track2" x="40" y="772" width="240" height="34" rx="8"/>
+  <text class="track" x="160" y="795">2단계 사채 대환</text>
+
+  <!-- 대환 가심사 -->
+  <rect class="ln2" x="40" y="834" width="460" height="124" rx="10"/>
+  <text class="ln2h" x="62" y="868">사채 대환 가심사</text>
+  <text class="boxs" x="62" y="894">절감액과 새 월상환액, 연체 불이익을</text>
+  <text class="boxs" x="62" y="918">모국어로 동일 비중 고지</text>
+  <text class="boxs" x="62" y="942">에이전트는 안내와 가심사까지만 수행</text>
+
+  <line class="ar" x1="500" y1="896" x2="600" y2="896" marker-end="url(#ah)"/>
+  <text class="lbl" x="510" y="884">가심사 결과 회부</text>
+
+  <!-- JB 심사엔진 -->
+  <rect class="jb" x="600" y="834" width="460" height="124" rx="10"/>
+  <text class="jbh" x="622" y="868">전북은행 심사엔진 회부</text>
+  <text class="jbs" x="622" y="894">비자 잔여기간, DSR, 다중채무 필터 적용</text>
+  <text class="jbs" x="622" y="918">대출 승인은 전북은행의 배타적 권한</text>
+  <text class="jbs" x="622" y="942">승인 시 적금 연계로 신용 형성 지원</text>
+
+</svg>
+</body>
+</html>

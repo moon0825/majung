@@ -103,3 +103,23 @@ export const MOCK = {
     term_months: 36,
   }),
 };
+
+// ── 사업가치 콘솔(관리자 전용) 표시값. 거시 수치는 자체 추정, 1인당 절약은 치트시트 확정. ──
+// 세션 행동(traces)과 무관한 정적 거시값이라 시연 중에도 일관되게 유지된다.
+export const BIZ = {
+  refiConversionRate: 0.07,
+  refiBalanceKrw: 69_300_000_000,
+  annualInterestKrw: 6_650_000_000,
+  perCapitaSavingKrw: 2_500_000,
+  cumulativeBorrowers: 240_000,
+  marketSharePct: 72,
+  loanSharkApr: 0.30,
+  jbRefiApr: 0.1359,
+  funnel: [
+    { stage: "가심사 적격", pct: 100, locked: false },
+    { stage: "가심사 안내", pct: 92, locked: false },
+    { stage: "JB 회부", pct: 41, locked: false },
+    { stage: "승인 (JB 심사엔진)", pct: 18, locked: true },
+    { stage: "실행", pct: 7, locked: false },
+  ],
+};

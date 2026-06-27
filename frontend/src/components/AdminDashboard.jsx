@@ -4,6 +4,8 @@ import * as D from "../demoData.js";
 import {
   fmtKRW, fmtPct, gateCell, statusMeta, timeHMS,
 } from "../format.js";
+import BusinessValuePanel from "./BusinessValuePanel.jsx";
+import EmptyState from "./EmptyState.jsx";
 
 // 감사로그 event_type → 뱃지 색
 const EVENT_CLS = {
@@ -80,6 +82,9 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
         </div>
       </div>
 
+      {/* 사업가치 콘솔: 대환 전환 퍼널 + LTV·전환율 KPI (심사 핵심 메시지) */}
+      <BusinessValuePanel />
+
       {/* 상단 통계 카드 */}
       <div className="stat-row">
         <div className="stat-card">
@@ -126,8 +131,10 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
           </thead>
           <tbody>
             {traces.length === 0 ? (
-              <tr><td colSpan={7} className="empty-row">
-                아직 판정 내역이 없습니다. 고객 화면의 데모 컨트롤 버튼을 누르면 실시간 반영됩니다.
+              <tr><td colSpan={7}>
+                <EmptyState
+                  title="아직 판정 내역이 없습니다"
+                  sub="고객 화면에서 데모 단계를 실행하면 게이트 판정이 이 표에 실시간으로 적재됩니다." />
               </td></tr>
             ) : traces.map((t, i) => {
               const m = statusMeta(t.outcome.status);
@@ -158,8 +165,10 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
             </thead>
             <tbody>
               {strQ.length === 0 ? (
-                <tr><td colSpan={4} className="empty-row">
-                  큐 비어 있음{!healthy && " (백엔드 미연결)"}
+                <tr><td colSpan={4}>
+                  <EmptyState
+                    title="STR 후보가 없습니다"
+                    sub={`AML 점수 70 이상이면 자동으로 이 대기열에 등록됩니다.${!healthy ? " (백엔드 미연결: 오프라인 표시)" : ""}`} />
                 </td></tr>
               ) : strQ.map((r) => {
                 let flags = [];
@@ -186,7 +195,9 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
           <h4>감사로그 ({D.USER_ID}) <span className="cnt">검증·개선: 설명 가능성과 책임 소재 확보</span></h4>
           <div className="audit-list">
             {audit.length === 0 ? (
-              <div className="empty-row">로그 없음{!healthy && " (백엔드 미연결)"}</div>
+              <EmptyState
+                title="감사로그가 비어 있습니다"
+                sub={`모든 게이트 판정과 실행은 책임 소재 확보를 위해 이곳에 기록됩니다.${!healthy ? " (백엔드 미연결: 오프라인 표시)" : ""}`} />
             ) : audit.map((l) => (
               <div className="audit-item" key={l.log_id}>
                 <span className="time">{(l.created_at || "").slice(11, 19) || "-"}</span>
