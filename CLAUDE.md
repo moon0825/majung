@@ -48,11 +48,12 @@
 
 ## 7. 하루 케이던스
 - 낮·밤: 사람과 Claude가 함께 배치 단위로 개선한다. 사람이 산출물 품질을 확인한다.
-- 새벽: 클라우드 루틴(`OVERNIGHT_ROUTINE.md`)이 혼자 돈다. 백로그를 전진시키고 검증·개선 라운드를 한 번 돌린다. 컴퓨터는 꺼져 있어도 된다.
-- 아침: 사람이 PROGRESS_LOG와 PR diff를 보고 OK 또는 되돌리기를 정한다.
+- 새벽: 클라우드 루틴(`OVERNIGHT_ROUTINE.md`)이 혼자 돈다. 스스로 그날 계획을 짜고 백로그를 전진시키고 검증·개선 라운드를 한 번 돌린다. 컴퓨터는 꺼져 있어도 된다.
+- 아침: 사람이 노션 JB AI 페이지(스프린트 보드+새벽 브리핑)와 PROGRESS_LOG·PR diff를 보고 OK 또는 되돌리기를 정한 뒤 스프린트를 시작한다.
 
 ## 8. 문서 인덱스
 - 발표: `docs/본선_발표덱.md` · 화법: `docs/화법_가이드.md` · Q&A: `docs/본선_QnA_방어카드.md`
 - 수치: `docs/출처맵.md` · 전략 리서치: `docs/본선_리서치_2026-06-27.md` · 실무진: `docs/실무진_공감_분석.md`
 - 계획: `docs/본선_개발계획.md` · 팀 설계: `docs/harness_적용안.md`
 - 루틴: `OVERNIGHT_ROUTINE.md` · 백로그: `NIGHTLY_BACKLOG.md` · 진행: `PROGRESS_LOG.md`
+- 노션 대시보드(아침 스프린트): JB AI 페이지 https://app.notion.com/p/38ccba1f2f2581ee93b8c1d97bccfe98 (스프린트 보드 + 새벽 브리핑 로그). 진실은 레포 파일, 노션은 best-effort 대시보드.
