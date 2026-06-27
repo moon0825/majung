@@ -13,6 +13,13 @@ const EVENT_CLS = {
   execute: "pass", notify: "na", refer_to_jb_engine: "pass",
 };
 
+// STR 후속 처리(검토→보고/기각) 표시용 모의 라벨. 송금/판정 로직과 무관한 컴플라이언스 워크플로 UX.
+const STR_ACTION = {
+  review: { label: "검토 중", cls: "hold" },
+  report: { label: "FIU 보고(STR)", cls: "block" },
+  dismiss: { label: "기각(정상 판정)", cls: "na" },
+};
+
 function payloadSummary(json) {
   try {
     const p = JSON.parse(json);
@@ -35,6 +42,13 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
   const [audit, setAudit] = useState([]);
   const [auto, setAuto] = useState(true);
   const [last, setLast] = useState(null);
+  // STR 행별 후속 조치 기록(표시용 모의). 5초 폴링으로 큐가 갱신돼도 id 기준으로 유지된다.
+  const [strActions, setStrActions] = useState({});
+  const actStr = (id, action) =>
+    setStrActions((m) => ({
+      ...m,
+      [id]: { ...STR_ACTION[action], by: "컴플라이언스 담당", at: timeHMS(new Date()) },
+    }));
 
   const refresh = useCallback(async () => {
     const [f, s, a] = await Promise.all([api.fx(), api.strQueue(), api.audit(D.USER_ID)]);
@@ -161,11 +175,11 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
           <h4>STR 후보 대기열 <span className="cnt">특금법 연계: 의심 탐지가 자동 실행에 우선 · 사유는 점수 분해로 설명</span></h4>
           <table>
             <thead>
-              <tr><th>ID</th><th>AML 점수</th><th>보류 사유 (점수 분해)</th><th>상태</th></tr>
+              <tr><th>ID</th><th>AML 점수</th><th>보류 사유 (점수 분해)</th><th>상태</th><th>조치 (특금법 워크플로)</th></tr>
             </thead>
             <tbody>
               {strQ.length === 0 ? (
-                <tr><td colSpan={4}>
+                <tr><td colSpan={5}>
                   <EmptyState
                     title="STR 후보가 없습니다"
                     sub={`AML 점수 70 이상이면 자동으로 이 대기열에 등록됩니다.${!healthy ? " (백엔드 미연결: 오프라인 표시)" : ""}`} />
@@ -183,6 +197,20 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
                       </div>
                     </td>
                     <td><span className="badge hold">{r.status}</span></td>
+                    <td>
+                      {strActions[r.id] ? (
+                        <div className="str-done">
+                          <span className={`badge ${strActions[r.id].cls}`}>{strActions[r.id].label}</span>
+                          <div className="str-meta">{strActions[r.id].by} · {strActions[r.id].at}</div>
+                        </div>
+                      ) : (
+                        <div className="str-actions">
+                          <button onClick={() => actStr(r.id, "review")}>검토</button>
+                          <button onClick={() => actStr(r.id, "report")}>보고</button>
+                          <button onClick={() => actStr(r.id, "dismiss")}>기각</button>
+                        </div>
+                      )}
+                    </td>
                   </tr>
                 );
               })}

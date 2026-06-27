@@ -25,6 +25,9 @@ function GatePills({ outcome }) {
           </span>
         );
       })}
+      {/* 특금법 3종 완비 신호 (CDD 고객확인 · CTR 고액현금거래보고). 계좌이체라 CTR 비대상. */}
+      <span className="gate-pill na" title="특금법 고객확인의무(CDD)">CDD 고객확인 완료</span>
+      <span className="gate-pill na" title="특금법 고액현금거래보고(CTR)">CTR 비대상(계좌이체)</span>
     </div>
   );
 }

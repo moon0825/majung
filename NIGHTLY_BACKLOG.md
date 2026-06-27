@@ -19,8 +19,8 @@
 
 ## P1 체감도 — 컴플라이언스 화면 (저위험, 표시·읽기 레이어)
 - [x] (위험 낮음) AML "보류 사유 설명 패널": score 분해를 한국어로(예: 75 = 위임범위밖 30 + 신규수취인 25 + 고액 20). 기존 flags·score 표출만, 룰 무변경. 검증: vite build. → 완료 6/27(format.flagKoWeighted, AdminDashboard STR 큐)
-- [ ] (위험 낮음) STR 큐 행에 검토/보고/기각 액션 버튼(모의) + 담당자·처리시각 컬럼 — '워크플로의 일부'로 보이게. 표시만. 검증: vite build.
-- [ ] (위험 낮음) CDD·CTR 배지를 게이트 트레이스에 추가(고객확인 완료 / 현금 아님→CTR 비대상, 모의 표기). 특금법 3종 완비 신호. 표시만. 검증: vite build.
+- [x] (위험 낮음) STR 큐 행에 검토/보고/기각 액션 버튼(모의) + 담당자·처리시각 컬럼 — '워크플로의 일부'로 보이게. 표시만. 검증: vite build. → 완료 6/27(AdminDashboard 조치 컬럼+strActions)
+- [x] (위험 낮음) CDD·CTR 배지를 게이트 트레이스에 추가(고객확인 완료 / 현금 아님→CTR 비대상, 모의 표기). 특금법 3종 완비 신호. 표시만. 검증: vite build. → 완료 6/27(Cards.GatePills)
 - [ ] (위험 낮음) STR 큐 카드에 점수·플래그·차단사유를 'JB 컴플라이언스 심사창구' 톤으로 표시 다듬기(컬럼: 거래·점수·플래그·상태·사유). 표시만, 데이터는 기존 api.strQueue. 검증: `npx vite build --outDir /tmp/nightly-build --emptyOutDir`.
 - [x] (위험 낮음) 감사로그(audit) 항목의 event_type을 한국어 라벨로 매핑 표시(gate_a→위임검증, gate_c→AML 등). 표시만. 검증: vite build. → 완료 6/27(format.eventKo)
 - [ ] (위험 낮음) 대시보드 상단에 '검증·개선: 설명가능성·책임소재' 헤더 카피와 적재 건수 가독성 개선. 표시만. 검증: vite build.
