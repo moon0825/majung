@@ -1,6 +1,39 @@
 # 야간 진행 로그 (최신이 위)
 
 ---
+## 사이클 브리핑 (2026-06-28 첫 사이클, claude/finals-prototype-prep-02e3b6)
+
+**사이클 계획**: 2026-06-28 하루 1회 풀 검증(number-auditor·regulation-defender·demo-qa 병렬) + 발견 항목 즉시 정정.
+
+### 한 일
+| # | 작업 | 결과 |
+|---|------|------|
+| 1 | _workspace/ 생성 + NIGHTLY_BACKLOG 완료 마킹 | ✅ |
+| 2 | vite build (37모듈) + pytest (40/40) 초기 검증 | ✅ |
+| 3 | number-auditor 실행 → _workspace/number_report_20260628.md | ✅ 위험 2건 발견 |
+| 4 | regulation-defender 실행 → _workspace/regulation_report_20260628.md | ✅ 위험 3건 발견 |
+| 5 | demo-qa 실행 → _workspace/demo_qa_report_20260628.md | ✅ 런북↔코드 전항목 일치 |
+| 6 | QnA Q14 "외국인 대출 1조" → "1조 269억(JB그룹, 전북 6,538억 포함)" 정정 | ✅ 문서 |
+| 7 | 발표덱 오프닝 "백만 명" → "수십만 명" (클로징 통일) | ✅ 문서 |
+| 8 | 발표덱 클로징 "사채는 제도권으로 넘어갑니다" → "JB가 승인하면 제도권으로 옮길 수 있습니다" | ✅ 문서 |
+| 9 | QnA Q4 외국환 연한도 5만달러 방어 한 줄 보강 | ✅ 문서 |
+
+### 통과·실패
+- 검증 라운드: number-auditor·regulation-defender·demo-qa ✅ 완료
+- 문서 정정 4건: 모두 ✅ 통과 (코드 불변, 동결구역 무변경)
+- 빌드·테스트: 문서 변경이므로 별도 검증 불필요
+
+### 남은 인간 리뷰 항목 (사이클에서 건드리지 않음)
+- [중요] 특금법 CDD/CTR: UI 배지는 "(모의)" 표기로 안전하나, 발표 구두 답변에서 "JB 기존 컴플라이언스가 CDD/CTR 수행, 마중은 STR 회부만 추가"로 일관성 유지 필요 — 본선 전 발표자 숙지 권고
+- [중요] 가심사 [B] 워터마크: demo-qa 기준 코드에 3개 배지 이미 구현됨. regulation-defender 우려 해소됨.
+- DSR 하드코딩 0.32, GET /metrics/loop, 등급별 금리: 사람 리뷰 후 머지
+
+### 다음 사이클 제안
+1. 발표덱 숫자 섹션 화법 점검 (korean-stylist로 AI 티 제거 — 문서만)
+2. Q&A 방어카드 화법 점검 (추가 AI 번역투 여부)
+3. docs/시연스크립트.md 녹화 폴백 분리 촬영 계획 보완 (demo-qa 권고)
+
+---
 ## 아침 브리핑 (2026-06-27 새벽 → 아침, claude/finals-prototype-prep-02e3b6)
 
 ### (1) 오늘 한 일 (6커밋, 전부 `claude/finals-prototype-prep-02e3b6`)
