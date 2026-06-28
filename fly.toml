@@ -1,0 +1,25 @@
+# Fly.io 배포 설정 — 단일 오리진 컨테이너.
+# 사용: fly launch --no-deploy --copy-config  (앱 이름은 본인 것으로) → fly deploy
+app = "majung-demo"
+primary_region = "nrt"   # 도쿄(한국 근접). 가용 리전에 맞춰 변경 가능.
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/api/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

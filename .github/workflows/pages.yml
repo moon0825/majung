@@ -1,0 +1,44 @@
+# GitHub Pages 자동 배포(백업 URL). main 머지 시 또는 수동 실행 시 정적 프론트 배포.
+# 정적이라 백엔드는 동작하지 않고 "오프라인 미리보기(목 데이터)" 모드로 카드/게이트를 시연한다.
+# 실시간 3중 게이트가 필요한 본 데모는 컨테이너 호스팅(Dockerfile/render.yaml/fly.toml)을 사용.
+name: Deploy demo to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build frontend (subpath base)
+        working-directory: frontend
+        env:
+          VITE_BASE: /majung/
+        run: |
+          npm ci || npm install
+          npm run build
+          touch dist/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+      - id: deploy
+        uses: actions/deploy-pages@v4
