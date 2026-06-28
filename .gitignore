@@ -38,3 +38,17 @@ docs/render/
 /09_제안서_작성패턴_DB.md
 docs/제안서_초안.md
 docs/기능명세서_초안.md
+
+# 하네스: 운영 서브셋만 공개(클라우드 실행용). 전략·채점·레드팀·학습은 로컬 전용.
+.claude/worktrees/
+.claude/skills/jb-finals/
+.claude/skills/jb-scoring-rubric/
+.claude/skills/jb-deck-strategy/
+.claude/skills/jb-evidence-redteam/
+.claude/skills/korean-proposal/
+.claude/agents/jb-narrative-architect.md
+.claude/agents/jb-delivery-writer.md
+.claude/agents/jb-polish.md
+.claude/agents/jb-scoring-qa.md
+.claude/agents/jb-research-redteam.md
+.claude/jb-learnings.md
