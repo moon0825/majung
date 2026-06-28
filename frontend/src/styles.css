@@ -1,20 +1,44 @@
-/* ─── 마중(Majung) 데모 디자인 시스템 — JB 팔레트 ─── */
+/* ─── 마중(Majung) 데모 디자인 시스템 ───────────────────────────
+   디자인 토큰 단일 레이어. 색·깊이·형태·간격·무대 스케일을 한곳에서 정의하고,
+   아래 규칙은 모두 이 토큰만 참조한다. 고정 수치(FX·대환·AML)는 표시 데이터이며
+   토큰이 아니므로 demoData.js 에서 관리한다.
+   ─────────────────────────────────────────────────────────────── */
 :root {
+  /* 원시 토큰: JB 브랜드 팔레트 */
   --jb-navy: #1f4e79;
   --jb-navy-deep: #173a5c;
   --jb-blue: #2e75b6;
   --jb-light: #deebf7;
-  --ok: #1a7f37;
-  --ok-bg: #e6f4ea;
-  --hold: #9a6700;
-  --hold-bg: #fff4d6;
-  --block: #c0392b;
-  --block-bg: #fbeae8;
+
+  /* 의미 토큰: 게이트 판정 상태 색 */
+  --ok: #1a7f37;        --ok-bg: #e6f4ea;
+  --hold: #9a6700;      --hold-bg: #fff4d6;
+  --block: #c0392b;     --block-bg: #fbeae8;
+
+  /* 텍스트·선 */
   --ink: #15273b;
   --ink-sub: #5d7186;
   --line: #dbe5ef;
+
+  /* 깊이(elevation) */
+  --elev-1: 0 1px 2px rgba(21, 39, 59, 0.06), 0 1px 3px rgba(21, 39, 59, 0.04);
+  --elev-2: 0 2px 8px rgba(21, 39, 59, 0.08), 0 4px 16px rgba(21, 39, 59, 0.05);
+  --elev-3: 0 10px 30px rgba(21, 39, 59, 0.16), 0 2px 8px rgba(21, 39, 59, 0.08);
   --card-shadow: 0 2px 10px rgba(21, 39, 59, 0.08);
+  --ring-focus: 0 0 0 3px rgba(46, 117, 182, 0.3);
+
+  /* 형태 */
   --radius: 16px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+
+  /* 간격 스케일 */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px;
+  --sp-4: 16px; --sp-5: 20px; --sp-6: 24px;
+
+  /* 무대 스케일: 프로젝션·대화면 대응(미디어쿼리에서 재정의) */
+  --stage-scale: 1;
+
   font-size: 16px;
 }
 
@@ -167,6 +191,40 @@ main { padding: 22px 24px 40px; }
 .m-acct { font-size: 12px; opacity: 0.85; margin-top: 8px; }
 .m-balance { font-size: 28px; font-weight: 800; margin-top: 2px; letter-spacing: 0.3px; }
 .m-balance small { font-size: 14px; font-weight: 600; opacity: 0.85; }
+/* 다국어 환대 인사와 언어 토글 (표시 레이어 인상용) */
+.m-welcome {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.m-welcome-text { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
+.m-welcome-text .vi { font-size: 13px; font-weight: 600; }
+.m-welcome-text .ko { font-size: 11px; opacity: 0.82; }
+.lang-toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 2px;
+}
+.lang-toggle button {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  opacity: 0.8;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.lang-toggle button.active {
+  background: #fff;
+  color: var(--jb-navy);
+  opacity: 1;
+}
 .m-chips { margin-top: 8px; display: flex; gap: 6px; }
 .m-chip {
   font-size: 11px;
@@ -208,10 +266,12 @@ main { padding: 22px 24px 40px; }
   box-shadow: var(--card-shadow);
 }
 
-.vi { font-size: 14.5px; color: var(--ink); }
-.ko { font-size: 12px; color: var(--ink-sub); margin-top: 3px; }
+/* 베트남어 주 표기(위)와 한국어 병기(아래)의 타이포 위계.
+   주는 또렷하게, 병기는 보조로 한 단 낮춰 텍스트 밀도를 정리한다. */
+.vi { font-size: 14.5px; font-weight: 500; color: var(--ink); line-height: 1.5; }
+.ko { font-size: 11.5px; color: var(--ink-sub); margin-top: 4px; line-height: 1.5; }
 .bubble.user .vi { color: #fff; }
-.bubble.user .ko { color: rgba(255, 255, 255, 0.75); }
+.bubble.user .ko { color: rgba(255, 255, 255, 0.78); }
 
 /* 타이핑 표시 */
 .typing { display: inline-flex; gap: 4px; padding: 12px 16px; }
@@ -321,7 +381,7 @@ main { padding: 22px 24px 40px; }
 .score-badge.hold { background: var(--hold-bg); color: var(--hold); }
 .score-badge.block { background: var(--block-bg); color: var(--block); }
 
-/* 금소법 — 동일 비중 4분할 그리드 (절약액·월상환·총상환·연체가산 전부 같은 크기) */
+/* 금소법 동일 비중 4분할 그리드 (절약액·월상환·총상환·연체가산 전부 같은 크기) */
 .equal-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -691,13 +751,8 @@ tr:last-child td { border-bottom: none; }
 /* ───────────────────────────────────────────────────────────────
    상용화 보강 (추가 전용). 기존 규칙은 건드리지 않고 후순위로 덮어쓴다.
    게이트 로직·레이아웃 구조 불변, 시각 깊이·위계·빈 상태·사업가치 면만 강화.
+   깊이·포커스 토큰은 상단 디자인 토큰 레이어로 통합함.
    ─────────────────────────────────────────────────────────────── */
-:root {
-  --elev-1: 0 1px 2px rgba(21, 39, 59, 0.06), 0 1px 3px rgba(21, 39, 59, 0.04);
-  --elev-2: 0 2px 8px rgba(21, 39, 59, 0.08), 0 4px 16px rgba(21, 39, 59, 0.05);
-  --elev-3: 0 10px 30px rgba(21, 39, 59, 0.16), 0 2px 8px rgba(21, 39, 59, 0.08);
-  --ring-focus: 0 0 0 3px rgba(46, 117, 182, 0.3);
-}
 
 /* 깊이 위계: 카드는 얕게, 패널·표는 한 단 띄우고, 폰은 가장 높게 */
 .stat-card, .table-card, .panel { box-shadow: var(--elev-2); }
@@ -874,3 +929,310 @@ tr:last-child td { border-bottom: none; }
 .appfoot a { color: var(--jb-navy); font-weight: 600; text-decoration: none; }
 .appfoot a:hover { text-decoration: underline; }
 .appfoot .sep { opacity: 0.4; }
+
+/* ═══════════════════════════════════════════════════════════════
+   데모 UI/UX 보강 레이어 (표시 전용). 게이트 로직·타이밍·고정 수치 불변.
+   카드 시각 위계, 컴플라이언스 콘솔 질감, 파이프라인 6단계, 무대 스케일.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── 고객 카드: 종류별 아이콘 + 좌측 색 띠로 한눈에 구분 ─── */
+.card-ico { flex-shrink: 0; }
+/* 아이콘과 AUTO 태그가 붙어도 좁은 폰 폭에서 헤더가 잘리지 않도록 줄바꿈 허용 */
+.card-head { flex-wrap: wrap; row-gap: 3px; }
+.card-head .head-tag {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  padding: 2px 7px;
+}
+.card-t-mandate { border-left: 3px solid var(--jb-navy); }
+.card-t-salary  { border-left: 3px solid var(--jb-blue); }
+.card-t-auto    { border-left: 3px solid var(--ok); }
+.card-t-hold    { border-left: 3px solid var(--hold); }
+.card-t-block   { border-left: 3px solid var(--block); }
+.card-t-refi    { border-left: 3px solid var(--ok); }
+.card-t-reject  { border-left: 3px solid #8696a7; }
+
+/* 자동 실행 1컷: 감지에서 실행까지 한 화면에서 읽히도록 스테퍼로 명시
+   (paced 타이밍·녹색 글로우는 동결, 여기서는 정적 표시만 보강) */
+.auto-steps { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.auto-step {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ok);
+  background: var(--ok-bg);
+  border: 1px solid #bfe3c8;
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+}
+.auto-sep {
+  width: 14px; height: 2px;
+  border-radius: 2px;
+  background: #bfe3c8;
+  flex-shrink: 0;
+}
+
+/* 보류·차단 카드의 AML 점수·플래그 행 (인라인 스타일 대체) */
+.aml-row { gap: 8px; align-items: center; }
+
+/* 대환 카드 동일 비중 고지 캡션 (금소법 설명의무 모의) */
+.equal-cap {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-sub);
+  background: #f4f7fb;
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  line-height: 1.45;
+}
+
+/* ─── 관리자: 전북은행 컴플라이언스 콘솔 헤더 ─── */
+.console-head {
+  background: linear-gradient(90deg, var(--jb-navy-deep), var(--jb-navy) 60%, var(--jb-blue));
+  color: #fff;
+  border-radius: 14px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  box-shadow: var(--elev-2);
+}
+.console-title { display: flex; align-items: center; gap: var(--sp-3); }
+.console-badge {
+  background: #fff;
+  color: var(--jb-navy);
+  font-weight: 800;
+  font-size: 13px;
+  padding: 5px 9px;
+  border-radius: 7px;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.console-titletext { display: flex; flex-direction: column; gap: 2px; }
+.console-titletext b { font-size: 16px; letter-spacing: 0.2px; }
+.console-sub { font-size: 11.5px; opacity: 0.85; line-height: 1.4; max-width: 560px; }
+.env-tag {
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.env-tag.on { background: rgba(94, 224, 138, 0.18); color: #d7f7e2; }
+.env-tag.off { background: rgba(255, 179, 71, 0.2); color: #ffe6c2; }
+.refresh-ts { opacity: 0.7; font-size: 12px; }
+
+/* ─── 관리자: 에이전트 처리 파이프라인 (평가 6단계 풀세트) ─── */
+.pipeline {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--elev-2);
+  padding: 14px 18px 12px;
+}
+.pipeline-cap {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--jb-navy);
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.pipeline-cap-sub { font-size: 11.5px; font-weight: 700; color: var(--ink-sub); letter-spacing: 0.3px; }
+.pl-stages { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--sp-2); }
+.pl-stage {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(180deg, #fafcfe, #fff);
+  padding: 10px 12px;
+}
+.pl-stage::after {
+  content: "";
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  width: 6px;
+  height: 2px;
+  background: var(--line);
+  transform: translateY(-50%);
+}
+.pl-stage:last-child::after { display: none; }
+.pl-top { display: flex; align-items: center; gap: 7px; }
+.pl-num {
+  width: 20px; height: 20px;
+  flex-shrink: 0;
+  background: var(--jb-navy);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pl-name { font-size: 13px; font-weight: 800; color: var(--ink); }
+.pl-desc { font-size: 10.5px; color: var(--ink-sub); line-height: 1.45; margin-top: 6px; }
+.pipeline-loop {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+}
+.loop-cap { font-size: 11.5px; font-weight: 800; color: var(--jb-navy); }
+.loop-chip-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--jb-navy);
+}
+.loop-conn { width: 14px; height: 2px; border-radius: 2px; background: var(--jb-blue); display: inline-block; }
+.loop-note { font-size: 11px; color: var(--ink-sub); margin-left: 4px; }
+
+/* 표 안의 모노 셀 (인라인 스타일 대체, 칩 배경 없음) */
+.cell-mono { font-family: Consolas, "Courier New", monospace; font-size: 12px; color: var(--jb-navy); }
+
+/* 통계 카드 보조 (인라인 스타일 대체) */
+.stat-badge-row { margin-top: var(--sp-2); }
+.stat-card .big.big-sm { font-size: 17px; }
+
+/* ─── 사업가치 콘솔: 손익 효과 흐름 + LTV 강조 태그 ─── */
+.biz-tag.alt { color: var(--ok); background: var(--ok-bg); border-color: #bfe3c8; }
+.biz-pl { padding: 2px 18px 12px; }
+.biz-pl .ft { font-size: 12.5px; font-weight: 700; color: var(--ink-sub); margin-bottom: 10px; }
+.biz-ft-sub { font-weight: 600; font-size: 11px; color: var(--ink-sub); opacity: 0.85; margin-left: 6px; }
+.pl-flow { display: flex; align-items: stretch; gap: var(--sp-2); flex-wrap: wrap; }
+.pl-node {
+  flex: 1;
+  min-width: 150px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 14px;
+  background: linear-gradient(180deg, #fafcfe, #fff);
+}
+.pl-node .pl-k { font-size: 11px; color: var(--ink-sub); font-weight: 700; }
+.pl-node .pl-v { font-size: 19px; font-weight: 800; letter-spacing: -0.4px; margin-top: 5px; color: var(--ink); }
+.pl-node.rev { border-color: #bcd4ec; background: linear-gradient(180deg, var(--jb-light), #fff); }
+.pl-node.rev .pl-v { color: var(--jb-navy); }
+.pl-node.save { border-color: #bfe3c8; background: linear-gradient(180deg, var(--ok-bg), #fff); }
+.pl-node.save .pl-v { color: var(--ok); }
+.pl-conn {
+  align-self: center;
+  width: 16px; height: 2px;
+  border-radius: 2px;
+  background: var(--jb-blue);
+  flex-shrink: 0;
+}
+.pl-note { font-size: 11px; color: var(--ink-sub); line-height: 1.5; margin-top: 8px; }
+
+/* ─── 프로젝션·대화면 무대 안전: 폰 프레임을 무대 크기에 맞춰 확대 ─── */
+.stage .phone {
+  transform: scale(var(--stage-scale));
+  transform-origin: top center;
+  margin-bottom: calc((var(--stage-scale) - 1) * 760px);
+}
+@media (min-width: 1700px) { .stage { --stage-scale: 1.12; } }
+@media (min-width: 1920px) { .stage { --stage-scale: 1.22; } }
+
+/* 6단계 파이프라인·손익 흐름의 좁은 화면 대응 */
+@media (max-width: 1100px) {
+  .pl-stages { grid-template-columns: repeat(3, 1fr); }
+  .pl-stage::after { display: none; }
+}
+@media (max-width: 720px) {
+  .pl-stages { grid-template-columns: 1fr 1fr; }
+}
+
+/* 모션 최소화: 확대 변환은 유지(레이아웃 안전), 추가 전환만 비활성 */
+@media (prefers-reduced-motion: reduce) {
+  .auto-step, .pl-stage { transition: none; }
+}
+
+/* ─── v2 유학생 surface (둘째 입구). 기존 토큰만 참조, 동결 동작 무관 ─────────── */
+.student-stage { display: block; padding: var(--sp-5); }
+.student-view { max-width: 880px; margin: 0 auto; }
+.student-hd {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+  gap: var(--sp-3); padding: var(--sp-4) var(--sp-5);
+  background: linear-gradient(135deg, var(--jb-navy), var(--jb-blue));
+  color: #fff; border-radius: var(--radius); box-shadow: var(--elev-2);
+}
+.student-id { display: flex; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; }
+.student-id b { font-size: 1.15rem; }
+.seg-badge {
+  background: rgba(255,255,255,0.18); padding: 2px 10px; border-radius: var(--radius-pill);
+  font-size: 0.78rem; font-weight: 700;
+}
+.student-sub { font-size: 0.82rem; opacity: 0.9; }
+.student-tag { font-size: 0.82rem; opacity: 0.92; }
+
+.student-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); margin-top: var(--sp-4);
+}
+@media (max-width: 720px) { .student-grid { grid-template-columns: 1fr; } }
+
+.student-card {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: var(--sp-4) var(--sp-5); box-shadow: var(--elev-1); margin-top: var(--sp-4);
+}
+.student-grid .student-card { margin-top: 0; }
+.student-card-hd { font-weight: 700; color: var(--ink); margin-bottom: var(--sp-3); }
+.student-card-hd .zh { color: var(--ink-sub); font-weight: 500; font-size: 0.85rem; margin-left: 6px; }
+.student-row { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-3); }
+.student-note { font-size: 0.78rem; color: var(--ink-sub); margin-top: var(--sp-2); }
+.student-msg { font-size: 0.9rem; color: var(--ink); margin-top: var(--sp-2); }
+.student-msg.ko { color: var(--ink-sub); font-size: 0.82rem; }
+.student-foot { font-size: 0.78rem; color: var(--ink-sub); text-align: center; margin-top: var(--sp-5); }
+
+.fx-chip {
+  background: var(--ok-bg); color: var(--ok); padding: 4px 10px;
+  border-radius: var(--radius-pill); font-size: 0.8rem; font-weight: 700; white-space: nowrap;
+}
+.tuition-result { margin-top: var(--sp-3); padding: var(--sp-3); border-radius: var(--radius-sm); background: var(--ok-bg); }
+.tuition-result.warn { background: var(--hold-bg); }
+.tuition-title { font-weight: 700; margin-bottom: var(--sp-2); }
+.tuition-title .ko { color: var(--ink-sub); font-weight: 500; font-size: 0.82rem; margin-left: 6px; }
+
+/* 계좌 생애주기 stepper */
+.acct-lifecycle { display: flex; align-items: stretch; gap: var(--sp-2); flex-wrap: wrap; }
+.acct-stage { display: flex; align-items: center; gap: var(--sp-2); flex: 1; min-width: 160px; }
+.acct-dot {
+  width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  font-weight: 700; font-size: 0.8rem; flex-shrink: 0;
+  background: var(--line); color: var(--ink-sub);
+}
+.acct-stage.done .acct-dot { background: var(--ok); color: #fff; }
+.acct-stage.current .acct-dot { background: var(--jb-blue); color: #fff; }
+.acct-title { font-weight: 700; font-size: 0.9rem; }
+.acct-zh { color: var(--ink-sub); font-weight: 500; font-size: 0.78rem; }
+.acct-sub { font-size: 0.74rem; color: var(--ink-sub); }
+.acct-ready { font-size: 0.74rem; color: var(--ok); font-weight: 700; }
+.acct-arrow { color: var(--ink-sub); margin: 0 var(--sp-1); }
+.acct-stage.future { opacity: 0.55; }
+
+/* 한도해제 미터 */
+.limit-meter { display: flex; align-items: center; gap: 6px; margin-bottom: var(--sp-2); }
+.limit-pip { width: 36px; height: 8px; border-radius: var(--radius-pill); background: var(--line); }
+.limit-pip.on { background: var(--ok); }
+.limit-count { font-size: 0.8rem; color: var(--ink-sub); margin-left: var(--sp-2); }
+
+/* 신용 스냅샷 */
+.credit-step { display: inline-block; background: var(--jb-light); color: var(--jb-navy); font-weight: 700; padding: 4px 12px; border-radius: var(--radius-pill); font-size: 0.85rem; }
+.credit-stats { display: flex; gap: var(--sp-5); margin: var(--sp-3) 0; }
+.credit-stats div { display: flex; flex-direction: column; }
+.credit-stats b { font-size: 1.3rem; color: var(--ink); }
+.credit-stats span { font-size: 0.74rem; color: var(--ink-sub); }
+.grad-ready { margin-bottom: var(--sp-2); }

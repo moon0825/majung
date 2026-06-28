@@ -6,11 +6,13 @@ skinparam packageStyle rectangle
 skinparam actorStyle awesome
 
 actor "외국인 근로자\n(E-9, 모국어)" as User
+actor "유학생\n(D-2, 中文)" as Student
 actor "보호자/관리자\n(대시보드)" as Admin
 
-actor "환율 피드" as FX
+actor "환율 피드\n(KRW/VND·KRW/CNY)" as FX
 actor "한패스 레일\n(모의)" as Hanpass
 actor "JB 심사엔진\n(모의)" as JBEngine
+actor "가계좌 온보딩\n(생체인증·인상)" as Onboard
 actor "LLM\n(의도 파싱)" as LLM
 
 rectangle "마중 (Majung), 위임형 뱅킹 에이전트" {
@@ -30,8 +32,15 @@ rectangle "마중 (Majung), 위임형 뱅킹 에이전트" {
   usecase "STR 후보 큐 적재" as UCSTR
 
   ' ── 2단계: 신용 사다리 ──
-  usecase "사채 대환 가심사\n(연 ~250만원 절약)" as UC7
+  usecase "사채 대환 가심사\n(연 약 250만 원 절약)" as UC7
   usecase "JB 심사엔진 회부\n(승인 아님)" as UC8
+
+  ' ── v2 유학생 세그먼트 (같은 엔진, 두 입구) ──
+  usecase "등록금 위임 송금\n(KRW/CNY, 대학 화이트리스트)" as SUC1
+  usecase "한도해제 코치\n(가계좌→정식계좌)" as SUC2
+  usecase "재학중 신용형성 안내\n(연속급여·정시거래)" as SUC3
+  usecase "졸업전환 가심사\n(JB 회부·승인 아님)" as SUC4
+  usecase "계좌 생애주기 연계" as SUC5
 
   ' ── 관리/설명가능성 ──
   usecase "감사로그·STR 큐 조회" as UC9
@@ -59,7 +68,7 @@ UC2 ..> GC : <<include>>
 
 ' 예외 분기(extend)
 UC3 ..> UC2 : <<extend>>\n위임밖/의심
-UC4 ..> GC : <<extend>>\n블랙리스트 하드컷
+UC4 ..> GC : <<extend>>\n블랙리스트 즉시 차단
 UCSTR ..> GC : <<extend>>\nscore >= 70
 
 ' 2단계 흐름
@@ -70,8 +79,32 @@ UC8 --> JBEngine : 회부(접수번호)
 UC2 ..> UC6 : <<include>>
 UC3 ..> UC6 : <<include>>
 
+' ── v2 유학생: 같은 위임장·같은 3중 게이트를 공유한다(두 입구, 한 엔진) ──
+Student --> SUC1
+Student --> SUC2
+Student --> SUC4
+Student --> SUC5
+Onboard --> SUC5 : 가계좌 개설(인상)
+FX --> SUC1 : KRW/CNY 7일평균
+
+' 등록금 송금도 송금 자동 실행과 동일한 3중 게이트를 반드시 포함
+SUC1 ..> GA : <<include>>
+SUC1 ..> GB : <<include>>
+SUC1 ..> GC : <<include>>
+SUC1 ..> UC6 : <<include>>\n中文 통지
+
+' 졸업전환 가심사는 기존 JB 회부 경로 재사용
+SUC4 ..> UC8 : <<include>>
+SUC2 ..> SUC5 : <<extend>>\n해제 조건 충족
+
 note bottom of GA
   제1원칙: "LLM은 송금 실행 경로에 없다."
   판단(Gate A·B·C) → 행동(실행/보류/알림) → 검증/개선
+  v2: 근로자·유학생이 같은 위임장·같은 3중 게이트를 공유.
+end note
+
+note top of SUC4
+  Future Work(로드맵): 스테이블코인 등록금 정산,
+  CB(외국인 신용평가) 연계. 본 데모는 활성화 레이어까지.
 end note
 @enduml

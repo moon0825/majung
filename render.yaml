@@ -1,0 +1,13 @@
+# Render Blueprint — 단일 오리진 컨테이너 배포.
+# 사용: Render 대시보드 → New → Blueprint → 이 저장소 선택(render.yaml 자동 인식).
+# 무료 플랜은 콜드스타트가 있으니, 라이브 시연 직전 1회 워밍업 호출 권장(/api/health).
+services:
+  - type: web
+    name: majung-demo
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: singapore
+    healthCheckPath: /api/health
+    autoDeploy: false
+    branch: feat/majung-v2-student-segment

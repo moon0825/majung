@@ -13,6 +13,19 @@ const EVENT_CLS = {
   execute: "pass", notify: "na", refer_to_jb_engine: "pass",
 };
 
+// 에이전트 처리 파이프라인 평가 6단계 풀세트. 각 단계는 백엔드 동작과 1:1로 대응한다.
+// 수집 get_fx_rate·급여, 검색 validate_mandate·화이트리스트, 판단 Gate A/B/C,
+// 생성 notify_user·대환 가심사, 검증 append_audit_log, 후속액션 집행·STR·JB 회부.
+const STAGES = [
+  { k: "collect", name: "수집", desc: "급여 입금, FX, 수취인 데이터" },
+  { k: "search", name: "검색", desc: "위임장, 화이트리스트, 블랙리스트, 룰셋 조회" },
+  { k: "judge", name: "판단", desc: "Gate A 위임장, Gate B Rule·FX, Gate C AML" },
+  { k: "generate", name: "생성", desc: "위임장 초안, 대환 가심사 안내, 모국어 통지" },
+  { k: "verify", name: "검증", desc: "감사로그, 게이트 트레이스 적재" },
+  { k: "followup", name: "후속액션", desc: "집행, 보류, STR 큐 등록, JB 회부" },
+];
+const LOOP = ["판단", "행동", "검증·개선"];
+
 function payloadSummary(json) {
   try {
     const p = JSON.parse(json);
@@ -61,24 +74,53 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
 
   return (
     <div className="admin">
-      {/* 아키텍처 제1원칙 + 평가 용어 파이프라인 */}
-      <div className="principle-strip">
-        <b>송금 절차에서 LLM 배제 (할루시네이션에 따른 금융 사고 원천 차단)</b>
-        <div className="pipe">
-          <span>수집 (급여·FX)</span><i>→</i>
-          <span>판단 (Gate A 위임장 · Gate B Rule·FX · Gate C AML)</span><i>→</i>
-          <span>행동 (집행/보류/차단)</span><i>→</i>
-          <span>검증·개선 (감사로그 · STR 큐)</span>
+      {/* 컴플라이언스 콘솔 헤더: 전북은행 내부 업무 도구 질감 */}
+      <div className="console-head">
+        <div className="console-title">
+          <span className="console-badge">JB</span>
+          <div className="console-titletext">
+            <b>전북은행 외환·여신 컴플라이언스 콘솔</b>
+            <span className="console-sub">
+              위임형 뱅킹 에이전트 게이트 판정 실시간 모니터링. 송금 실행 경로에서 LLM 배제, 한도와 화이트리스트로 최대 손실 사전 제한
+            </span>
+          </div>
         </div>
         <div className="admin-controls">
+          <span className={`env-tag ${healthy ? "on" : "off"}`}>
+            {healthy ? "API 연결됨" : "오프라인 표시값"}
+          </span>
           <label>
             <input type="checkbox" checked={auto} onChange={(e) => setAuto(e.target.checked)} />
             5초 자동
           </label>
           <button className="btn btn-ghost" onClick={refresh}>새로고침</button>
-          <span style={{ opacity: 0.7 }}>
-            {last ? `갱신 ${timeHMS(last)}` : "-"}{!healthy && " · 오프라인 표시값"}
-          </span>
+          <span className="refresh-ts">{last ? `갱신 ${timeHMS(last)}` : "-"}</span>
+        </div>
+      </div>
+
+      {/* 에이전트 처리 파이프라인: 평가 6단계 풀세트 (수집·검색·판단·생성·검증·후속액션) */}
+      <div className="pipeline">
+        <div className="pipeline-cap">
+          에이전트 처리 파이프라인
+          <span className="pipeline-cap-sub">수집 · 검색 · 판단 · 생성 · 검증 · 후속액션</span>
+        </div>
+        <div className="pl-stages">
+          {STAGES.map((s, i) => (
+            <div className="pl-stage" key={s.k}>
+              <div className="pl-top"><span className="pl-num">{i + 1}</span><span className="pl-name">{s.name}</span></div>
+              <div className="pl-desc">{s.desc}</div>
+            </div>
+          ))}
+        </div>
+        <div className="pipeline-loop">
+          <span className="loop-cap">실행 루프</span>
+          {LOOP.map((l, i) => (
+            <span key={l} className="loop-chip-inline">
+              {i > 0 && <span className="loop-conn" aria-hidden="true" />}
+              {l}
+            </span>
+          ))}
+          <span className="loop-note">모든 판정은 결정적 코드가 수행</span>
         </div>
       </div>
 
@@ -91,7 +133,7 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
           <div className="t">FX 현황 (KRW/VND)</div>
           <div className="big">{rateNow.toFixed(2)} <small>VND/KRW</small></div>
           <div className="sub2">7일평균 {rateMa.toFixed(2)} · 임계 ≥1%</div>
-          <div style={{ marginTop: 8 }}>
+          <div className="stat-badge-row">
             <span className={`badge ${advOk ? "pass" : "hold"}`}>
               {fmtPct(adv)} {advOk ? "조건 충족: TRIGGER_EXECUTE" : "조건 미달: WAIT"}
             </span>
@@ -99,8 +141,8 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
         </div>
         <div className="stat-card">
           <div className="t">위임장 상태</div>
-          <div className="big" style={{ fontSize: 17 }}>{mandate.id}</div>
-          <div style={{ marginTop: 8 }}>
+          <div className="big big-sm">{mandate.id}</div>
+          <div className="stat-badge-row">
             {mandate.status === "active"
               ? <span className="badge pass">ACTIVE (전자서명, 건별 통지, 철회권 내장)</span>
               : <span className="badge block">REVOKED (무조건 철회 처리됨)</span>}
@@ -140,7 +182,7 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
               const m = statusMeta(t.outcome.status);
               return (
                 <tr key={i}>
-                  <td className="mono" style={{ background: "none" }}>{timeHMS(t.ts)}</td>
+                  <td className="cell-mono">{timeHMS(t.ts)}</td>
                   <td>{t.bnf}</td>
                   <td>{fmtKRW(t.amountKrw)}</td>
                   {["A", "B", "C"].map((g) => {
@@ -175,7 +217,7 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
                 try { flags = JSON.parse(r.flags); } catch { flags = [String(r.flags)]; }
                 return (
                   <tr key={r.id}>
-                    <td className="mono" style={{ background: "none" }}>STR-{r.id}</td>
+                    <td className="cell-mono">STR-{r.id}</td>
                     <td><span className={`badge ${r.score >= 70 ? "block" : "hold"}`}>{r.score}</span></td>
                     <td>
                       <div className="flags">

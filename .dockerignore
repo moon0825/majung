@@ -1,0 +1,11 @@
+# 빌드 컨텍스트 최소화
+**/node_modules
+**/dist
+**/.venv
+**/__pycache__
+**/*.pyc
+backend/majung.db
+.git
+docs/captures
+*.md
+!backend/requirements.txt
