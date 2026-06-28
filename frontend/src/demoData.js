@@ -110,7 +110,7 @@ export const BIZ = {
   refiConversionRate: 0.07,
   refiBalanceKrw: 69_300_000_000,
   annualInterestKrw: 6_650_000_000,
-  perCapitaSavingKrw: 2_500_000,
+  perCapitaSavingKrw: 2_461_500,
   cumulativeBorrowers: 240_000,
   marketSharePct: 72,
   loanSharkApr: 0.30,

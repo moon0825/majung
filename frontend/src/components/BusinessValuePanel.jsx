@@ -1,9 +1,18 @@
+import { useState } from "react";
 import * as D from "../demoData.js";
 import { fmtEok } from "../format.js";
 
 // 사업가치 콘솔(관리자 전용, 한국어 단일).
 // KPI는 신규 모객이 아니라 생애가치(LTV)와 대환 전환을 측정한다.
 // 거시 수치는 자체 추정값이며 세션 행동과 무관하게 정적으로 표시한다(시연 일관성).
+
+// 전환율 민감도 시나리오 (E-9 32만 × 15% × 전환율 × 1,500만 × 9.59%p)
+const SCENARIOS = [
+  { label: "보수", rate: 0.03, interest: 2_062_350_000 },
+  { label: "기준", rate: 0.07, interest: 4_812_150_000 },
+  { label: "낙관", rate: 0.12, interest: 8_249_400_000 },
+];
+
 function LockIcon() {
   return (
     <svg className="funnel-lock" width="11" height="11" viewBox="0 0 24 24"
@@ -17,6 +26,7 @@ function LockIcon() {
 export default function BusinessValuePanel() {
   const b = D.BIZ;
   const pct = (x) => `${Math.round(x * 100)}%`;
+  const [scenIdx, setScenIdx] = useState(1); // 기본=기준(7%)
 
   return (
     <div className="biz-panel">
@@ -46,6 +56,39 @@ export default function BusinessValuePanel() {
           <div className="k">고객 1인당 연 절약액</div>
           <div className="v">{fmtEok(b.perCapitaSavingKrw)}</div>
           <div className="d">사채 연 {(b.loanSharkApr * 100).toFixed(1)}% → JB 연 {(b.jbRefiApr * 100).toFixed(2)}%</div>
+        </div>
+      </div>
+
+      {/* 전환율 민감도 표 토글 — '7% 한 점 베팅' 인상 제거 */}
+      <div className="biz-scenario">
+        <div className="ft">수익기회 시나리오 (전환율별)</div>
+        <div className="scenario-tabs" role="tablist" aria-label="전환율 시나리오">
+          {SCENARIOS.map((s, i) => (
+            <button
+              key={s.label}
+              role="tab"
+              aria-selected={scenIdx === i}
+              className={`scen-tab ${scenIdx === i ? "active" : ""}`}
+              onClick={() => setScenIdx(i)}
+            >
+              {s.label} ({pct(s.rate)})
+            </button>
+          ))}
+        </div>
+        <div className="scenario-body">
+          <div className="scen-row">
+            <span>전환율 가정</span>
+            <span className="scen-val">{pct(SCENARIOS[scenIdx].rate)}</span>
+          </div>
+          <div className="scen-row">
+            <span>대환 전환 대상 (E-9 32만 × 부채보유 15% × 전환율)</span>
+            <span className="scen-val">약 {Math.round(320_000 * 0.15 * SCENARIOS[scenIdx].rate / 1000).toLocaleString()}천 명</span>
+          </div>
+          <div className="scen-row">
+            <span>JB 연 이자수익(차감 전, 자체 추정)</span>
+            <span className="scen-val">{fmtEok(SCENARIOS[scenIdx].interest)}</span>
+          </div>
+          <div className="scen-note">공식: 대상 근로자 × 1인 대환잔액 1,500만 × 스프레드 9.59%p. JB 실제 데이터 입력 시 즉시 확정.</div>
         </div>
       </div>
 
@@ -92,7 +135,10 @@ export default function BusinessValuePanel() {
         <div className="loop-arrow">↓</div>
         <div className="loop-row">
           <span className="loop-step imp">개선 제안</span>
-          <span className="loop-text">환율 변동성 확대 구간 진입 시 임계값 1.2% 이상 상향 제안. 적용은 고객 위임장 갱신 동의가 전제</span>
+          <span className="loop-text">
+            환율 변동성 확대 구간 진입 시 임계값 1.2% 이상 상향 제안.
+            <span className="loop-note"> ⚠️ 임계값 변경은 자동 적용되지 않습니다. 고객이 위임장 갱신에 동의해야만 반영됩니다.</span>
+          </span>
         </div>
       </div>
 

@@ -25,6 +25,9 @@ const GREETING = () => [
     vi: "Xin chào anh Minh! Tôi là Majung, trợ lý ngân hàng ủy quyền của anh.",
     ko: "안녕하세요, 민 님. 위임형 뱅킹 에이전트 '마중'입니다." },
   { id: nid(), kind: "bot",
+    vi: "Tôi biết anh đang gánh khoản vay 1.500 만원, lãi 30%/năm từ trước khi sang Hàn. Tôi giúp anh gửi tiền an toàn về nhà và từng bước giảm lãi khoản vay đó.",
+    ko: "입국 전 떠안으신 1,500만원·연 30% 사채를 알고 있어요. 안전한 송금과, 그 사채를 한 걸음씩 줄이는 일을 함께 도와드릴게요." },
+  { id: nid(), kind: "bot",
     vi: "Anh cần gì? Có thể nói bằng tiếng Việt.",
     ko: "무엇을 도와드릴까요? 베트남어로 말씀하셔도 됩니다." },
 ];
@@ -159,6 +162,10 @@ export default function App() {
       if (!intent) intent = localIntent(msg);
 
       if (intent === "remit" || intent === "create_mandate") {
+        // LLM 의도파싱 안내 카드: 금액은 후보일 뿐, 게이트가 위임장으로 재검증 (표시 push만, 플로우 불변)
+        push({ kind: "bot",
+          vi: "🔍 Tôi đã phân tích yêu cầu của anh (NLP). Số tiền chỉ là đề xuất — cổng xác minh ủy quyền sẽ kiểm tra lại chính xác.",
+          ko: "🔍 발화에서 의도를 파싱했습니다. 금액은 후보값일 뿐입니다. 실제 한도·수취인·조건은 게이트가 위임장으로 재검증합니다." });
         push({ kind: "bot",
           vi: "Tôi đã soạn giấy ủy quyền theo yêu cầu của anh. Hãy đọc kỹ bằng tiếng Việt rồi ký nhé.",
           ko: "요청 내용으로 위임장 초안을 만들었어요. 모국어로 꼼꼼히 확인한 뒤 서명해 주세요." });

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "../api.js";
 import * as D from "../demoData.js";
 import {
-  fmtKRW, fmtPct, gateCell, statusMeta, timeHMS,
+  eventKo, flagKoWeighted, fmtKRW, fmtPct, gateCell, statusMeta, timeHMS,
 } from "../format.js";
 import BusinessValuePanel from "./BusinessValuePanel.jsx";
 import EmptyState from "./EmptyState.jsx";
@@ -11,6 +11,13 @@ import EmptyState from "./EmptyState.jsx";
 const EVENT_CLS = {
   gate_a: "navy", gate_b: "navy", gate_c: "navy",
   execute: "pass", notify: "na", refer_to_jb_engine: "pass",
+};
+
+// STR 후속 처리(검토→보고/기각) 표시용 모의 라벨. 송금/판정 로직과 무관한 컴플라이언스 워크플로 UX.
+const STR_ACTION = {
+  review: { label: "검토 중", cls: "hold" },
+  report: { label: "FIU 보고(STR)", cls: "block" },
+  dismiss: { label: "기각(정상 판정)", cls: "na" },
 };
 
 function payloadSummary(json) {
@@ -35,6 +42,13 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
   const [audit, setAudit] = useState([]);
   const [auto, setAuto] = useState(true);
   const [last, setLast] = useState(null);
+  // STR 행별 후속 조치 기록(표시용 모의). 5초 폴링으로 큐가 갱신돼도 id 기준으로 유지된다.
+  const [strActions, setStrActions] = useState({});
+  const actStr = (id, action) =>
+    setStrActions((m) => ({
+      ...m,
+      [id]: { ...STR_ACTION[action], by: "컴플라이언스 담당", at: timeHMS(new Date()) },
+    }));
 
   const refresh = useCallback(async () => {
     const [f, s, a] = await Promise.all([api.fx(), api.strQueue(), api.audit(D.USER_ID)]);
@@ -63,12 +77,12 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
     <div className="admin">
       {/* 아키텍처 제1원칙 + 평가 용어 파이프라인 */}
       <div className="principle-strip">
-        <b>송금 절차에서 LLM 배제 (할루시네이션에 따른 금융 사고 원천 차단)</b>
+        <b>검증·개선: 설명가능성과 책임소재 — 송금 절차에서 LLM 배제 (할루시네이션에 따른 금융 사고 원천 차단)</b>
         <div className="pipe">
           <span>수집 (급여·FX)</span><i>→</i>
           <span>판단 (Gate A 위임장 · Gate B Rule·FX · Gate C AML)</span><i>→</i>
           <span>행동 (집행/보류/차단)</span><i>→</i>
-          <span>검증·개선 (감사로그 · STR 큐)</span>
+          <span className="pipe-highlight">검증·개선 (감사로그 {audit.length}건 · STR 큐 {strQ.length}건 적재)</span>
         </div>
         <div className="admin-controls">
           <label>
@@ -156,16 +170,22 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
       </div>
 
       <div className="two-col">
-        {/* STR 후보 큐 */}
+        {/* STR 후보 큐 — JB 컴플라이언스 심사창구 톤 */}
         <div className="table-card">
-          <h4>STR 후보 대기열 <span className="cnt">AML 연계: 의심 탐지가 자동 실행에 우선</span></h4>
+          <h4>STR 후보 대기열 <span className="cnt">JB 컴플라이언스 심사창구 · 의심 탐지가 자동 실행에 우선 · 사유는 점수 분해로 설명</span></h4>
           <table>
             <thead>
-              <tr><th>ID</th><th>score</th><th>flags</th><th>상태</th></tr>
+              <tr>
+                <th>거래 ID</th>
+                <th>AML 점수</th>
+                <th>차단·보류 사유 (점수 분해)</th>
+                <th>상태</th>
+                <th>컴플라이언스 조치 (특금법 STR 워크플로)</th>
+              </tr>
             </thead>
             <tbody>
               {strQ.length === 0 ? (
-                <tr><td colSpan={4}>
+                <tr><td colSpan={5}>
                   <EmptyState
                     title="STR 후보가 없습니다"
                     sub={`AML 점수 70 이상이면 자동으로 이 대기열에 등록됩니다.${!healthy ? " (백엔드 미연결: 오프라인 표시)" : ""}`} />
@@ -175,14 +195,32 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
                 try { flags = JSON.parse(r.flags); } catch { flags = [String(r.flags)]; }
                 return (
                   <tr key={r.id}>
-                    <td className="mono" style={{ background: "none" }}>STR-{r.id}</td>
-                    <td><span className={`badge ${r.score >= 70 ? "block" : "hold"}`}>{r.score}</span></td>
+                    <td className="mono" style={{ background: "none", fontWeight: 600 }}>STR-{r.id}</td>
+                    <td>
+                      <span className={`badge ${r.score >= 70 ? "block" : "hold"}`} style={{ fontSize: 15, fontWeight: 700 }}>
+                        {r.score}점
+                      </span>
+                    </td>
                     <td>
                       <div className="flags">
-                        {flags.map((f) => <span key={f} className="flag-chip">{f}</span>)}
+                        {flags.map((f) => <span key={f} className="flag-chip">{flagKoWeighted(f)}</span>)}
                       </div>
                     </td>
-                    <td><span className="badge hold">{r.status}</span></td>
+                    <td><span className="badge hold">{r.status === "pending" ? "심사대기" : r.status}</span></td>
+                    <td>
+                      {strActions[r.id] ? (
+                        <div className="str-done">
+                          <span className={`badge ${strActions[r.id].cls}`}>{strActions[r.id].label}</span>
+                          <div className="str-meta">{strActions[r.id].by} · {strActions[r.id].at}</div>
+                        </div>
+                      ) : (
+                        <div className="str-actions">
+                          <button aria-label="STR 건 검토 시작" onClick={() => actStr(r.id, "review")}>검토</button>
+                          <button aria-label="FIU STR 보고" onClick={() => actStr(r.id, "report")}>FIU 보고</button>
+                          <button aria-label="정상 판정·기각" onClick={() => actStr(r.id, "dismiss")}>기각(정상)</button>
+                        </div>
+                      )}
+                    </td>
                   </tr>
                 );
               })}
@@ -201,7 +239,7 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
             ) : audit.map((l) => (
               <div className="audit-item" key={l.log_id}>
                 <span className="time">{(l.created_at || "").slice(11, 19) || "-"}</span>
-                <span className={`badge ${EVENT_CLS[l.event_type] || "navy"}`}>{l.event_type}</span>
+                <span className={`badge ${EVENT_CLS[l.event_type] || "navy"}`}>{eventKo(l.event_type)}</span>
                 <span className="payload">{payloadSummary(l.payload_json)}</span>
               </div>
             ))}
