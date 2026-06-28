@@ -12,10 +12,16 @@ const CHIPS = [
 // 다국어 인상용 환대 인사. 근로자는 베트남어가 기본, 유학생 등 보편성은 중국어 한 컷으로 보인다.
 // 완전 번역이 아니라 주고객 나라에서 그대로 쓰겠다는 감만 주는 표시 레이어 토글이다.
 const WELCOME = {
-  vi: { main: "Chào mừng bạn đến Hàn Quốc", label: "Tiếng Việt" },
+  vi: { main: "Xin chào! Majung luôn sẵn sàng giúp bạn 🤝", label: "Tiếng Việt" },
   zh: { main: "欢迎您来到韩国", label: "中文" },
 };
 const WELCOME_KO = "마중: 한국에 오신 분을 먼저 나가 맞이합니다";
+
+// E-9 첫 진입 컨텍스트: 입국 시 사채 문제 → 마중 대환 가치 (표시만, 수치 출처: 서울경제TV 2026.3)
+const CONTEXT_LOAN = {
+  vi: "Vay môi giới nhập cảnh: 15 tr KRW · lãi 30%/năm → Majung tái cấp vốn 13,59%",
+  ko: "입국 시 브로커 사채 1,500만·연 30% → JB 마중 대환 13.59%",
+};
 
 export default function CustomerChat({ feed, busy, balance, mandate, actions }) {
   const [input, setInput] = useState("");
@@ -91,6 +97,9 @@ export default function CustomerChat({ feed, busy, balance, mandate, actions }) 
             <span className="m-chip revoked">Ủy quyền: đã hủy · 위임 철회됨</span>
           )}
           <span className="m-chip">{mandate.id}</span>
+        </div>
+        <div className="m-context-loan">
+          {lang === "vi" ? CONTEXT_LOAN.vi : CONTEXT_LOAN.ko}
         </div>
       </div>
 

@@ -233,6 +233,16 @@ main { padding: 22px 24px 40px; }
   padding: 4px 10px;
 }
 .m-chip.revoked { background: rgba(192, 57, 43, 0.55); }
+.m-context-loan {
+  margin-top: 8px;
+  font-size: 10.5px;
+  line-height: 1.4;
+  background: rgba(255, 255, 255, 0.1);
+  border-left: 2px solid rgba(255, 210, 60, 0.75);
+  border-radius: 3px;
+  padding: 5px 8px;
+  opacity: 0.9;
+}
 
 /* 채팅 영역 */
 .chat {
