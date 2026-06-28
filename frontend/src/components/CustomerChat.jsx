@@ -12,10 +12,16 @@ const CHIPS = [
 // 다국어 인상용 환대 인사. 근로자는 베트남어가 기본, 유학생 등 보편성은 중국어 한 컷으로 보인다.
 // 완전 번역이 아니라 주고객 나라에서 그대로 쓰겠다는 감만 주는 표시 레이어 토글이다.
 const WELCOME = {
-  vi: { main: "Chào mừng bạn đến Hàn Quốc", label: "Tiếng Việt" },
+  vi: { main: `Xin chào, ${D.USER_NAME}! – JB Majung luôn ở đây vì bạn`, label: "Tiếng Việt" },
   zh: { main: "欢迎您来到韩国", label: "中文" },
 };
 const WELCOME_KO = "마중: 한국에 오신 분을 먼저 나가 맞이합니다";
+// E-9 페르소나 첫 진입 컨텍스트: 입국 전 브로커 사채 상황 (출처: 서울경제TV 2026.3)
+const CONTEXT_LINE = {
+  vi: "Nợ môi giới nhập cảnh: 15 tr KRW · 30%/năm → JB hỗ trợ tái cơ cấu",
+  ko: "입국 시 브로커 사채 1,500만 · 연 30%",
+  zh: "入境中介借贷 1,500万KRW · 年利30%",
+};
 
 export default function CustomerChat({ feed, busy, balance, mandate, actions }) {
   const [input, setInput] = useState("");
@@ -72,6 +78,7 @@ export default function CustomerChat({ feed, busy, balance, mandate, actions }) 
           <div className="m-welcome-text">
             <span className="vi">{WELCOME[lang].main}</span>
             <span className="ko">{WELCOME_KO}</span>
+            <span className="m-context-line">{CONTEXT_LINE[lang] ?? CONTEXT_LINE.ko}</span>
           </div>
           <div className="lang-toggle" role="group" aria-label="언어 선택 / Ngôn ngữ / 语言">
             <button type="button" className={lang === "vi" ? "active" : ""}
