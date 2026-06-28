@@ -23,7 +23,8 @@ export default function BusinessValuePanel() {
       <div className="biz-head">
         <h4>사업가치 콘솔</h4>
         <span className="biz-tag">브라보코리아 전환 엔진</span>
-        <span className="biz-sub">핵심성과지표: 생애가치(LTV)와 대환 전환율. 신규 모객이 아닌 전환을 측정함</span>
+        <span className="biz-tag alt">KPI: 생애가치(LTV) · 대환 전환율</span>
+        <span className="biz-sub">핵심성과지표는 생애가치(LTV)와 대환 전환율로 둠. 신규 모객이 아닌 전환을 측정함</span>
       </div>
 
       <div className="biz-kpis">
@@ -49,13 +50,36 @@ export default function BusinessValuePanel() {
         </div>
       </div>
 
+      <div className="biz-pl">
+        <div className="ft">대환 손익 효과 <span className="biz-ft-sub">전환 잔액에서 연 이자수익까지 (자체 추정)</span></div>
+        <div className="pl-flow">
+          <div className="pl-node">
+            <div className="pl-k">대환 전환 잔액</div>
+            <div className="pl-v">{fmtEok(b.refiBalanceKrw)}</div>
+          </div>
+          <span className="pl-conn" aria-hidden="true" />
+          <div className="pl-node rev">
+            <div className="pl-k">연 이자수익(전환분)</div>
+            <div className="pl-v">{fmtEok(b.annualInterestKrw)}</div>
+          </div>
+          <span className="pl-conn" aria-hidden="true" />
+          <div className="pl-node save">
+            <div className="pl-k">고객 1인당 연 절약</div>
+            <div className="pl-v">{fmtEok(b.perCapitaSavingKrw)}</div>
+          </div>
+        </div>
+        <div className="pl-note">
+          사채 연 {(b.loanSharkApr * 100).toFixed(1)}%에서 JB 연 {(b.jbRefiApr * 100).toFixed(2)}%로 전환할 때의 효과. 생애가치(LTV)는 전환 잔액과 이자수익으로 측정함
+        </div>
+      </div>
+
       <details className="biz-src">
         <summary>수치 가정·산식 보기</summary>
         <div className="biz-src-body">
           <p>거시 수치는 보수적 자체 추정이며, 1인당 절약액만 확정 출처입니다.</p>
           <ul>
             <li><b>대환 전환율 {pct(b.refiConversionRate)}</b>: 휴면 다운로드와 기존 외국인 고객 가운데 대환 적격 전환 비율 가정</li>
-            <li><b>대환 전환 잔액 {fmtEok(b.refiBalanceKrw)}</b>: 대상 사채 추정 잔액에 전환율 {pct(b.refiConversionRate)}를 적용한 값</li>
+            <li><b>대환 전환 잔액 {fmtEok(b.refiBalanceKrw)}</b>: 누적 차주 {(b.cumulativeBorrowers / 10000).toFixed(0)}만 명 × 대환 침투율 가정 × 1인당 평균 대환 잔액으로 산출. {fmtEok(b.refiBalanceKrw)}은 기본 시나리오 추정이며, 침투율 가정을 낮추면 보수, 높이면 낙관 시나리오임</li>
             <li><b>연 이자수익 {fmtEok(b.annualInterestKrw)}</b>: 전환 잔액에 JB 대환 금리 스프레드를 적용한 값</li>
             <li><b>1인당 연 {fmtEok(b.perCapitaSavingKrw)}</b>: 사채 연 {(b.loanSharkApr * 100).toFixed(1)}%와 JB 연 {(b.jbRefiApr * 100).toFixed(2)}%의 이자 차이(치트시트 확정값)</li>
           </ul>

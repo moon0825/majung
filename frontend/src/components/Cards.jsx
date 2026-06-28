@@ -4,6 +4,31 @@ import {
   GATE_NAME, statusMeta,
 } from "../format.js";
 
+// ── 카드 종류별 아이콘 (head 색을 그대로 상속, 표시 전용) ──
+const ICONS = {
+  mandate: "M6 3h8l4 4v14H6zM14 3v4h4M9 13h6M9 16.5h6",
+  signed: "M12 3l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V6zM9 12l2 2 4-4",
+  salary: "M12 4v10M8 11l4 4 4-4M5 19h14",
+  auto: "M13 3L5 13h5l-1 8 8-11h-5z",
+  hold: "M10 8v8M14 8v8M4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0",
+  block: "M5.5 5.5l13 13M4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0",
+  refi: "M4 7h12l-3-3M20 17H8l3 3M7 11l-3 3 3 3M17 13l3-3-3-3",
+  receipt: "M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6",
+  revoked: "M4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0M9 9l6 6M15 9l-6 6",
+  notif: "M12 4a5 5 0 0 0-5 5c0 5-2 6-2 6h14s-2-1-2-6a5 5 0 0 0-5-5zM10 19a2 2 0 0 0 4 0",
+};
+function Ico({ name }) {
+  const d = ICONS[name];
+  if (!d) return null;
+  return (
+    <svg className="card-ico" width="17" height="17" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" strokeWidth="1.9"
+      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d={d} />
+    </svg>
+  );
+}
+
 // ── 공용 조각 ─────────────────────────────────────────────────
 function Bi({ vi, ko }) {
   return (
@@ -41,8 +66,9 @@ function FlagChips({ flags }) {
 // ── ① 위임장 카드 ────────────────────────────────────────────
 function MandateCard({ item, actions }) {
   return (
-    <div className="card">
+    <div className="card card-t-mandate">
       <div className="card-head navy">
+        <Ico name="mandate" />
         Giấy ủy quyền chuyển tiền
         <span className="sub">송금 위임장 (전자서명·건별통지·철회권)</span>
       </div>
@@ -94,8 +120,9 @@ function MandateCard({ item, actions }) {
 // ── 서명 완료 카드 ───────────────────────────────────────────
 function SignedCard({ item }) {
   return (
-    <div className="card">
+    <div className="card card-t-mandate">
       <div className="card-head ok">
+        <Ico name="signed" />
         Đã ký điện tử <span className="sub">전자서명 완료</span>
       </div>
       <div className="card-body">
@@ -119,8 +146,9 @@ function SignedCard({ item }) {
 // ── ② 급여 감지 카드 ─────────────────────────────────────────
 function SalaryCard({ item }) {
   return (
-    <div className="card">
+    <div className="card card-t-salary">
       <div className="card-head navy">
+        <Ico name="salary" />
         Phát hiện lương về <span className="sub">급여 입금 감지</span>
       </div>
       <div className="card-body">
@@ -138,7 +166,7 @@ function SalaryCard({ item }) {
 }
 
 // ── 송금 판정 결과 카드 (executed / held / str_hold / blocked / rejected) ──
-function OutcomeCard({ item, actions, mandate }) {
+function OutcomeCard({ item, actions, mandate, lang }) {
   const o = item.outcome;
   const meta = statusMeta(o.status);
   const { score, flags } = amlOf(o);
@@ -146,12 +174,23 @@ function OutcomeCard({ item, actions, mandate }) {
   const vnd = fx.rateNow ? item.amountKrw * fx.rateNow : item.amountKrw * D.FX_SEED.now;
 
   if (o.status === "executed") {
+    // 다국어 인상: 핵심 카드 제목만 언어 토글에 맞춰 바뀐다. 한국어 병기는 유지한다.
+    const autoTitle = lang === "zh" ? "已自动汇款" : "Đã chuyển tiền tự động";
     return (
-      <div className="card card-auto">
+      <div className="card card-auto card-t-auto">
         <div className="card-head ok">
-          Đã chuyển tiền tự động <span className="sub">자동 송금 실행 (고객 개입 없음)</span>
+          <Ico name="auto" />
+          {autoTitle} <span className="sub">자동 송금 실행 (고객 개입 없음)</span>
+          <span className="head-tag">AUTO</span>
         </div>
         <div className="card-body">
+          <div className="auto-steps" aria-label="감지에서 실행까지 자동 처리">
+            <span className="auto-step">급여 감지</span>
+            <span className="auto-sep" />
+            <span className="auto-step">게이트 통과</span>
+            <span className="auto-sep" />
+            <span className="auto-step">자동 송금</span>
+          </div>
           <div>
             <div className="amount-big">{fmtNum(item.amountKrw)} KRW</div>
             <div className="amount-sub">≈ {fmtVND(vnd)} → {item.bnfLabel}</div>
@@ -185,8 +224,9 @@ function OutcomeCard({ item, actions, mandate }) {
 
   if (o.status === "held" || o.status === "str_hold") {
     return (
-      <div className="card">
+      <div className="card card-t-hold">
         <div className="card-head hold">
+          <Ico name="hold" />
           Tạm giữ giao dịch <span className="sub">송금 보류 (의심 탐지가 자동 실행에 우선)</span>
         </div>
         <div className="card-body">
@@ -194,7 +234,7 @@ function OutcomeCard({ item, actions, mandate }) {
             <div className="amount-big">{fmtNum(item.amountKrw)} KRW</div>
             <div className="amount-sub">{item.bnfLabel}</div>
           </div>
-          <div className="row" style={{ gap: 8, alignItems: "center" }}>
+          <div className="row aml-row">
             {score != null && <span className="score-badge hold">AML score {score}</span>}
             <FlagChips flags={flags} />
           </div>
@@ -230,8 +270,9 @@ function OutcomeCard({ item, actions, mandate }) {
 
   if (o.status === "blocked") {
     return (
-      <div className="card">
+      <div className="card card-t-block">
         <div className="card-head block">
+          <Ico name="block" />
           Đã chặn giao dịch <span className="sub">송금 차단</span>
         </div>
         <div className="card-body">
@@ -239,7 +280,7 @@ function OutcomeCard({ item, actions, mandate }) {
             <div className="amount-big">{fmtNum(item.amountKrw)} KRW</div>
             <div className="amount-sub">{item.bnfLabel}</div>
           </div>
-          <div className="row" style={{ gap: 8, alignItems: "center" }}>
+          <div className="row aml-row">
             <span className="score-badge block">블랙리스트 즉시 차단</span>
             <FlagChips flags={flags} />
           </div>
@@ -260,8 +301,9 @@ function OutcomeCard({ item, actions, mandate }) {
 
   // rejected 등
   return (
-    <div className="card">
+    <div className="card card-t-reject">
       <div className="card-head gray">
+        <Ico name="hold" />
         Không thực hiện <span className="sub">실행 안 함 ({meta.ko})</span>
       </div>
       <div className="card-body">
@@ -276,8 +318,9 @@ function OutcomeCard({ item, actions, mandate }) {
 // ── 위임 철회 완료 카드 ─────────────────────────────────────
 function RevokedCard({ item }) {
   return (
-    <div className="card">
+    <div className="card card-t-reject">
       <div className="card-head gray">
+        <Ico name="revoked" />
         Đã hủy ủy quyền <span className="sub">위임 철회 완료</span>
       </div>
       <div className="card-body">
@@ -296,8 +339,9 @@ function RefiCard({ item, actions }) {
   const o = item.offer;
   if (!o.eligible) {
     return (
-      <div className="card">
+      <div className="card card-t-reject">
         <div className="card-head gray">
+          <Ico name="refi" />
           Chưa đủ điều kiện <span className="sub">가심사 부적격</span>
         </div>
         <div className="card-body">
@@ -307,8 +351,9 @@ function RefiCard({ item, actions }) {
     );
   }
   return (
-    <div className="card">
+    <div className="card card-t-refi">
       <div className="card-head ok">
+        <Ico name="refi" />
         Đề xuất chuyển nợ sang JB <span className="sub">JB 대환대출 안내 (가심사)</span>
       </div>
       <div className="card-body">
@@ -319,6 +364,9 @@ function RefiCard({ item, actions }) {
         </div>
 
         {/* 4항목 동일 비중 고지, 절약액만 크게 쓰지 않는다 (금소법 설명의무 모의) */}
+        <div className="equal-cap">
+          Công bố đồng đều 4 mục · 절약액과 상환 부담을 같은 비중으로 고지 (금소법 설명의무 모의)
+        </div>
         <div className="equal-grid">
           <div className="equal-cell">
             <div className="lbl">Tiết kiệm / năm · 연 절약액</div>
@@ -364,8 +412,9 @@ function RefiCard({ item, actions }) {
 // ── 접수 완료 카드 ───────────────────────────────────────────
 function ReceiptCard({ item }) {
   return (
-    <div className="card">
+    <div className="card card-t-mandate">
       <div className="card-head navy">
+        <Ico name="receipt" />
         Đã nộp hồ sơ cho JB <span className="sub">JB 심사엔진 접수 완료</span>
       </div>
       <div className="card-body">
@@ -392,8 +441,9 @@ function NotifCard({ item }) {
   const vi = n.message_local || n.message_vi || n.message || "";
   const ko = n.message_ko || "";
   return (
-    <div className="card">
+    <div className="card card-t-salary">
       <div className="card-head navy">
+        <Ico name="notif" />
         Thông báo <span className="sub">알림</span>
       </div>
       <div className="card-body">
@@ -420,7 +470,7 @@ function ErrorCard({ item }) {
 }
 
 // ── 피드 디스패처 ────────────────────────────────────────────
-export default function FeedItem({ item, actions, mandate }) {
+export default function FeedItem({ item, actions, mandate, lang }) {
   switch (item.kind) {
     case "user":
       return (
@@ -437,7 +487,7 @@ export default function FeedItem({ item, actions, mandate }) {
     case "mandate": return <MandateCard item={item} actions={actions} />;
     case "signed": return <SignedCard item={item} />;
     case "salary": return <SalaryCard item={item} />;
-    case "outcome": return <OutcomeCard item={item} actions={actions} mandate={mandate} />;
+    case "outcome": return <OutcomeCard item={item} actions={actions} mandate={mandate} lang={lang} />;
     case "revoked": return <RevokedCard item={item} />;
     case "refi": return <RefiCard item={item} actions={actions} />;
     case "receipt": return <ReceiptCard item={item} />;

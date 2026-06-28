@@ -5,10 +5,11 @@ import PhoneFrame from "./components/PhoneFrame.jsx";
 import CustomerChat from "./components/CustomerChat.jsx";
 import ControlPanel from "./components/ControlPanel.jsx";
 import AdminDashboard from "./components/AdminDashboard.jsx";
+import StudentView from "./components/StudentView.jsx";
 
 // ───────────────────────────────────────────────────────────────
-// 아키텍처 제1원칙: 송금 절차에서 LLM을 배제하여 할루시네이션에 따른
-// 금융 사고를 원천 차단한다. 이 UI도 동일하게, 카드와 버튼은 백엔드의
+// 아키텍처 제1원칙: 송금 실행 경로에서 LLM을 배제하고, 한도와 화이트리스트로
+// 최대 손실을 사전에 제한한다. 이 UI도 동일하게, 카드와 버튼은 백엔드의
 // 3중 게이트 판정 "결과"를 보여줄 뿐, 실행 여부를 프론트가 결정하지 않는다.
 // ───────────────────────────────────────────────────────────────
 
@@ -440,11 +441,13 @@ export default function App() {
         <div className="brand">
           <span className="brand-mark">JB</span>
           <b>마중</b>
-          <span className="brand-sub">Majung 위임형 뱅킹 에이전트: 송금 절차에서 LLM 배제</span>
+          <span className="brand-sub">JB Bravo KOREA 안의 위임형 뱅킹 에이전트 · 송금 실행 경로에서 LLM 배제</span>
         </div>
         <nav className="tabs">
           <button className={`tab ${tab === "customer" ? "active" : ""}`}
-            onClick={() => setTab("customer")}>고객 화면</button>
+            onClick={() => setTab("customer")}>근로자 화면</button>
+          <button className={`tab ${tab === "student" ? "active" : ""}`}
+            onClick={() => setTab("student")}>유학생 화면 (D-2)</button>
           <button className={`tab ${tab === "admin" ? "active" : ""}`}
             onClick={() => setTab("admin")}>관리자 대시보드 (JB)</button>
         </nav>
@@ -462,6 +465,10 @@ export default function App() {
           </PhoneFrame>
           <ControlPanel actions={actions} busy={busy} healthy={healthy}
             onToggleFilm={() => setFilm((v) => !v)} />
+        </section>
+
+        <section className={tab === "student" ? "stage student-stage" : "stage student-stage hidden"}>
+          <StudentView healthy={healthy} />
         </section>
 
         <section className={tab === "admin" ? "" : "hidden"}>
