@@ -81,6 +81,9 @@ export default function CustomerChat({ feed, busy, balance, mandate, actions }) 
           </div>
         </div>
         <div className="m-acct">{D.ACCOUNT_ID} · {D.USER_NAME} 🇻🇳 (E-9)</div>
+        <div className="m-context-hint">
+          입국 시 브로커 사채 1,500만·연 30% → JB 대환 13.59% 대상 / Vay nặng lãi 30% → JB 13.59%
+        </div>
         <div className="m-balance">
           {fmtNum(balance)} <small>KRW</small>
         </div>
