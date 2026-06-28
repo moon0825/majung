@@ -18,13 +18,13 @@ flowchart LR
     HP["🔁 한패스 레일(모의)"]
     LLM["🧠 LLM (의도 파싱)"]
 
-    subgraph 마중["마중 (Majung) — 같은 엔진, 두 입구"]
+    subgraph 마중["마중 (Majung): 같은 엔진, 두 입구"]
         UC1["위임장 발급<br/>모국어 재확인+전자서명"]
         UC2["위임 송금 자동 실행<br/>(급여 트리거)"]
         UC3["의심거래 자동 보류<br/>+모국어 질문"]
         UC4["사기 수취인 차단<br/>(블랙리스트)"]
         UC5["위임 철회<br/>(무조건 철회권)"]
-        UC7["사채 대환 가심사<br/>연 ~250만원 절약"]
+        UC7["사채 대환 가심사<br/>연 약 250만 원 절약"]
         UC8["JB 심사엔진 회부<br/>(승인 아님)"]
         UC9["감사로그·STR 큐 조회"]
         SUC1["🎓 등록금 위임 송금<br/>(KRW/CNY, 대학 화이트리스트)"]
@@ -54,12 +54,12 @@ flowchart LR
     UC8 --> JB
 ```
 
-> **v2 핵심**: 유학생 등록금 송금(SUC1)은 새 송금 엔진이 아니라 근로자 자동 송금(UC2)과
-> **동일한 위임장·3중 게이트**를 `fx_pair=KRW/CNY`로 재사용한다. CB·스테이블코인은 Future Work.
+> **v2 핵심**: 유학생 등록금 송금(SUC1)은 근로자 자동 송금(UC2)과 **동일한 위임장·3중 게이트**를
+> `fx_pair=KRW/CNY`로 그대로 재사용한다(새 송금 엔진 없음). CB·스테이블코인은 Future Work.
 
 ---
 
-## 2. 시스템 구성도 — 3중 게이트 (§2)
+## 2. 시스템 구성도: 3중 게이트 (§2)
 
 ```mermaid
 flowchart TD
@@ -68,7 +68,7 @@ flowchart TD
     A --> B
     B -->|구조화된 intent| GA
 
-    subgraph GATE["3중 게이트 — 전부 결정적 코드"]
+    subgraph GATE["3중 게이트: 전부 결정적 코드"]
         GA["Gate A · 위임장 검증<br/>전자서명·유효기간·철회·범위"]
         GB["Gate B · Rule 한도·조건<br/>FX Rule + 금액 한도"]
         GC["Gate C · 화이트리스트 + AML<br/>structuring·신규×고액×심야·블랙리스트"]
@@ -87,7 +87,7 @@ flowchart TD
 
 ---
 
-## 3. 핵심 기능 흐름 — 1막 위임 송금 e2e (§4)
+## 3. 핵심 기능 흐름: 1단계 위임 송금 e2e (§4)
 
 ```mermaid
 sequenceDiagram
@@ -114,7 +114,7 @@ sequenceDiagram
 
 ---
 
-## 4. 핵심 기능 흐름 — 2막 대환 가심사 (§4)
+## 4. 핵심 기능 흐름: 2단계 대환 가심사 (§4)
 
 ```mermaid
 sequenceDiagram
@@ -128,7 +128,7 @@ sequenceDiagram
     ORC->>DB: 급여·사채·비자 조회 [수집]
     ORC->>ORC: 적격 필터(비자>만기·DSR≤0.40·다중채무<3·급여≥3개월) [판단]
     ORC->>ORC: 절약액/월상환/총상환/연체가산 계산 [생성]
-    ORC->>U: 연 246만원 절약 · 4블록 동일비중(금소법 모의) [검증]
+    ORC->>U: 연 246만 원 절약, 4블록 동일비중(금소법 모의) [검증]
     Note right of U: "예상치이며 최종 승인은 JB 심사엔진"
     U->>ORC: [JB에 신청]
     ORC->>JB: refer_to_jb_engine (승인 아님·회부) [후속액션]
@@ -137,9 +137,9 @@ sequenceDiagram
 
 ---
 
-## 5. 핵심 기능 흐름 — v2 유학생 등록금 위임 송금 (§4)
+## 5. 핵심 기능 흐름: v2 유학생 등록금 위임 송금 (§4)
 
-> **기존 3중 게이트 100% 재사용.** 신규는 얇은 엔드포인트 하나(`/student/tuition/execute`)뿐이며,
+> **기존 3중 게이트 그대로 재사용.** 신규는 얇은 엔드포인트 하나(`/student/tuition/execute`)뿐이며,
 > 동일 `run_remittance` 를 `fx_pair="KRW/CNY"` 로 호출한다. 오케스트레이터·룰 무수정.
 
 ```mermaid
@@ -170,7 +170,7 @@ sequenceDiagram
 
 ---
 
-## 6. 핵심 기능 흐름 — v2 가계좌 → 한도해제 → 활성화 (§4)
+## 6. 핵심 기능 흐름: v2 가계좌 → 한도해제 → 활성화 (§4)
 
 > **자금 이동 없음.** read-only 코치. 한도해제 판정은 신규 결정적 함수
 > `activation.evaluate_limit_release`(연속급여 ≥3개월). 송금 경로와 무관.

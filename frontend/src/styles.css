@@ -381,7 +381,7 @@ main { padding: 22px 24px 40px; }
 .score-badge.hold { background: var(--hold-bg); color: var(--hold); }
 .score-badge.block { background: var(--block-bg); color: var(--block); }
 
-/* 금소법 — 동일 비중 4분할 그리드 (절약액·월상환·총상환·연체가산 전부 같은 크기) */
+/* 금소법 동일 비중 4분할 그리드 (절약액·월상환·총상환·연체가산 전부 같은 크기) */
 .equal-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

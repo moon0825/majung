@@ -32,7 +32,7 @@ rectangle "마중 (Majung), 위임형 뱅킹 에이전트" {
   usecase "STR 후보 큐 적재" as UCSTR
 
   ' ── 2단계: 신용 사다리 ──
-  usecase "사채 대환 가심사\n(연 ~250만원 절약)" as UC7
+  usecase "사채 대환 가심사\n(연 약 250만 원 절약)" as UC7
   usecase "JB 심사엔진 회부\n(승인 아님)" as UC8
 
   ' ── v2 유학생 세그먼트 (같은 엔진, 두 입구) ──
@@ -68,7 +68,7 @@ UC2 ..> GC : <<include>>
 
 ' 예외 분기(extend)
 UC3 ..> UC2 : <<extend>>\n위임밖/의심
-UC4 ..> GC : <<extend>>\n블랙리스트 하드컷
+UC4 ..> GC : <<extend>>\n블랙리스트 즉시 차단
 UCSTR ..> GC : <<extend>>\nscore >= 70
 
 ' 2단계 흐름
@@ -105,6 +105,6 @@ end note
 
 note top of SUC4
   Future Work(로드맵): 스테이블코인 등록금 정산,
-  CB(외국인 신용평가) 연계 — 본 데모는 활성화 레이어까지.
+  CB(외국인 신용평가) 연계. 본 데모는 활성화 레이어까지.
 end note
 @enduml

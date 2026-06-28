@@ -81,14 +81,14 @@ export default function StudentView({ healthy }) {
           <b>{S.NAME}</b>
           <span className="student-sub">{S.VISA} 비자 · 中文/한국어 · 한도계좌</span>
         </div>
-        <div className="student-tag">같은 엔진, 두 입구 — 등록금 송금은 동일 3중 게이트(KRW/CNY)</div>
+        <div className="student-tag">같은 엔진, 두 입구: 등록금 송금도 동일 3중 게이트(KRW/CNY)</div>
       </header>
 
       {/* 계좌 생애주기: 가계좌 → 한도계좌(현재) → 정식계좌 */}
       <section className="student-card">
         <div className="student-card-hd">계좌 활성화 단계 <span className="zh">账户激活阶段</span></div>
         <AccountLifecycle current="limited" eligible={lifecycleEligible} />
-        <p className="student-note">JB가 깐 가계좌·한도계좌 위에서, 마중은 "언제 한도해제가 가능한지"를 코치합니다. 자금 이동 없음.</p>
+        <p className="student-note">JB가 깐 가계좌와 한도계좌 위에서, 마중은 "언제 한도해제가 가능한지"를 안내합니다. 자금 이동 없음.</p>
       </section>
 
       <div className="student-grid">
@@ -100,12 +100,12 @@ export default function StudentView({ healthy }) {
               <div className="amount-big">{fmtNum(S.TUITION_KRW)} KRW</div>
               <div className="amount-sub">{S.UNIV.labelZh} · {S.UNIV.labelKo}</div>
             </div>
-            <div className="fx-chip">环率 {fmtPct(S.FX_CNY.advantagePct)} (7日평균 대비)</div>
+            <div className="fx-chip">汇率 {fmtPct(S.FX_CNY.advantagePct)} (7일평균 대비)</div>
           </div>
 
           {!tuition ? (
             <button className="btn btn-primary" disabled={busy} onClick={runTuition}>
-              {busy ? "处理中…" : "环率 좋을 때 등록금 보내기"}
+              {busy ? "处理中…" : "환율 좋을 때 등록금 보내기"}
               <span className="ko-btn">3중 게이트 통과 시에만 실행</span>
             </button>
           ) : (
@@ -130,7 +130,7 @@ export default function StudentView({ healthy }) {
 
         {/* ② 한도해제 코치 (실동작 read-only) */}
         <section className="student-card">
-          <div className="student-card-hd">② 한도해제 코치 <span className="zh">限额解除指引</span></div>
+          <div className="student-card-hd">② 한도해제 안내 <span className="zh">限额解除指引</span></div>
           {limit ? (
             <>
               <div className="limit-meter" aria-label="연속 급여 입금 진행률">
@@ -158,7 +158,7 @@ export default function StudentView({ healthy }) {
 
         {/* ③ 재학중 신용형성 (인상 스냅샷) */}
         <section className="student-card">
-          <div className="student-card-hd">③ 재학중 신용형성 <span className="zh">在学期间信用积累</span></div>
+          <div className="student-card-hd">③ 재학 중 신용 형성 <span className="zh">在学期间信用积累</span></div>
           {credit ? (
             <>
               <div className="credit-step">{credit.credit_step}</div>
@@ -172,20 +172,20 @@ export default function StudentView({ healthy }) {
           ) : <div className="student-note">불러오는 중…</div>}
         </section>
 
-        {/* ④ 졸업전환 가심사 (인상·재사용 준비) — 원화 절약 헤드라인 미노출 */}
+        {/* 4. 졸업전환 가심사 (인상·재사용 준비). 원화 절약 헤드라인 미노출 */}
         <section className="student-card">
           <div className="student-card-hd">④ 졸업 후 신용 전환 <span className="zh">毕业后信用衔接</span></div>
           <div className="grad-ready">
             <span className="done-chip">가심사 적격 · 가등급 B</span>
           </div>
-          <div className="student-msg">졸업·취업 비자 전환 시, 재학중 쌓은 급여·거래 이력으로 대환 가심사를 바로 진행할 수 있도록 준비됩니다.</div>
+          <div className="student-msg">졸업하고 취업 비자로 전환하면, 재학 중 쌓은 급여와 거래 이력으로 대환 가심사를 바로 진행할 수 있습니다.</div>
           <div className="student-msg ko">毕业并转换工作签证时，可凭在学期间积累的工资与交易记录直接进行贷款预审。</div>
           <div className="student-note"><b>최종 승인은 전북은행 심사엔진의 배타적 권한</b>입니다.</div>
         </section>
       </div>
 
       <footer className="student-foot">
-        스테이블코인 등록금 정산 · CB(외국인 신용평가) 연계는 로드맵(Future Work)입니다. 본 데모는 활성화 레이어까지 시연합니다.
+        스테이블코인 등록금 정산과 CB(외국인 신용평가) 연계는 로드맵(Future Work)입니다. 본 데모는 활성화 레이어까지 시연합니다.
       </footer>
     </div>
   );
