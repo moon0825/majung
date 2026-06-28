@@ -189,6 +189,19 @@ main { padding: 22px 24px 40px; }
 }
 .m-bank span { font-weight: 400; font-size: 11px; opacity: 0.8; }
 .m-acct { font-size: 12px; opacity: 0.85; margin-top: 8px; }
+/* E-9 페르소나 첫 장면 컨텍스트 줄(표시 전용). 위험·경보 배경으로 사채 상황을 한눈에 전달. */
+.m-persona {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #ffd0cc;
+  background: rgba(192, 57, 43, 0.28);
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin-top: 4px;
+  display: inline-block;
+  line-height: 1.4;
+}
+.m-persona-vi { opacity: 0.75; font-weight: 500; }
 .m-balance { font-size: 28px; font-weight: 800; margin-top: 2px; letter-spacing: 0.3px; }
 .m-balance small { font-size: 14px; font-weight: 600; opacity: 0.85; }
 /* 다국어 환대 인사와 언어 토글 (표시 레이어 인상용) */
