@@ -188,6 +188,19 @@ main { padding: 22px 24px 40px; }
   letter-spacing: 0.5px;
 }
 .m-bank span { font-weight: 400; font-size: 11px; opacity: 0.8; }
+/* E-9 페르소나 첫 진입 맥락 배너 — 입국 사채 상황 요약 (표시 레이어) */
+.m-context-banner {
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.12);
+  border-left: 3px solid rgba(255,220,80,0.8);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.m-context-banner .vi { font-size: 11.5px; font-weight: 600; color: #ffe082; }
+.m-context-banner .ko { font-size: 10.5px; opacity: 0.82; }
 .m-acct { font-size: 12px; opacity: 0.85; margin-top: 8px; }
 .m-balance { font-size: 28px; font-weight: 800; margin-top: 2px; letter-spacing: 0.3px; }
 .m-balance small { font-size: 14px; font-weight: 600; opacity: 0.85; }
