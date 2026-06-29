@@ -202,6 +202,8 @@ main { padding: 22px 24px 40px; }
 .m-welcome-text { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
 .m-welcome-text .vi { font-size: 13px; font-weight: 600; }
 .m-welcome-text .ko { font-size: 11px; opacity: 0.82; }
+/* E-9 진입 배경 컨텍스트 한 줄 (표시 전용, 마중이 해결하는 문제) */
+.m-context { font-size: 10.5px; opacity: 0.7; margin-top: 5px; line-height: 1.5; letter-spacing: 0.1px; }
 .lang-toggle {
   display: inline-flex;
   flex-shrink: 0;
