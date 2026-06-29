@@ -23,7 +23,7 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import activation, llm, mcp_tools, orchestrator
+from . import llm, mcp_tools, orchestrator
 from .db import get_conn
 from .models import (
     MandateIssueRequest,
@@ -117,100 +117,6 @@ def refi_refer(payload: dict) -> dict:
     try:
         return mcp_tools.refer_to_jb_engine(
             conn, payload["user_id"], payload.get("refi_draft", {}))
-    finally:
-        conn.close()
-
-
-# ─────────────────────────────────────────────────────────────
-# v2 유학생 세그먼트 — 추가 엔드포인트 3종.
-# 송금 실행 경로(orchestrator·rules)는 무수정. 등록금 송금은 동일 run_remittance를
-# fx_pair=KRW/CNY 로 재사용("같은 엔진, 두 입구"). 나머지 둘은 read-only 코치/스냅샷.
-# ─────────────────────────────────────────────────────────────
-@app.post("/student/tuition/execute")
-def student_tuition_execute(req: RemittanceRequest) -> dict:
-    """유학생 등록금 외화 송금. 기존 3중 게이트 100% 재사용(fx_pair만 KRW/CNY)."""
-    conn = get_conn()
-    try:
-        outcome = orchestrator.run_remittance(
-            conn,
-            mandate_id=req.mandate_id,
-            bnf_id=req.bnf_id,
-            amount_krw=req.amount_krw,
-            fx_pair="KRW/CNY",
-            occurred_at=req.occurred_at,
-        )
-        return {
-            "status": outcome.status,
-            "message_ko": outcome.message_ko,
-            "message_local": outcome.message_local,
-            "tx_id": outcome.tx_id,
-            "gates": [
-                {"gate": t.gate, "label": t.label, "passed": t.passed, "detail": t.detail}
-                for t in outcome.traces
-            ],
-        }
-    finally:
-        conn.close()
-
-
-@app.get("/account/limit-status/{user_id}")
-def account_limit_status(user_id: str) -> dict:
-    """한도계좌 → 정식계좌 승급 코치(read-only). 자금 이동 없음."""
-    conn = get_conn()
-    try:
-        bal = mcp_tools.get_account_balance(conn, user_id)
-        if not bal.get("found"):
-            raise HTTPException(404, f"계좌 없음: {user_id}")
-        res = activation.evaluate_limit_release(
-            is_limited_account=bal["is_limited_account"],
-            salary_months_consecutive=bal["salary_months_consecutive"],
-        )
-        return {
-            "user_id": user_id,
-            "is_limited_account": bal["is_limited_account"],
-            "status": res.status,
-            "eligible": res.eligible,
-            "months_consecutive": res.months_consecutive,
-            "min_months": res.min_months,
-            "remaining_months": res.remaining_months,
-            "min_salary_krw": res.min_salary_krw,
-            "message_ko": res.message_ko,
-            "message_local": res.message_local,
-        }
-    finally:
-        conn.close()
-
-
-@app.get("/student/credit-profile/{user_id}")
-def student_credit_profile(user_id: str) -> dict:
-    """재학중 신용형성 스냅샷(read-only). 연속급여·정시거래 기반 인상 카드용."""
-    conn = get_conn()
-    try:
-        acct = conn.execute(
-            "SELECT salary_months_consecutive FROM accounts WHERE user_id = ?", (user_id,),
-        ).fetchone()
-        if acct is None:
-            raise HTTPException(404, f"계좌 없음: {user_id}")
-        months = acct["salary_months_consecutive"]
-        salary_count = conn.execute(
-            "SELECT COUNT(*) AS c FROM salary_events WHERE user_id = ?", (user_id,),
-        ).fetchone()["c"]
-        tx_count = conn.execute(
-            "SELECT COUNT(*) AS c FROM transactions WHERE user_id = ? AND status = 'executed'",
-            (user_id,),
-        ).fetchone()["c"]
-        # 신용 단계(인상): 연속급여 개월수로 단계 라벨링
-        step = "형성 시작" if months < 3 else ("신용 형성 중" if months < 6 else "신용 안정")
-        return {
-            "user_id": user_id,
-            "months_consecutive": months,
-            "salary_event_count": salary_count,
-            "on_time_tx_count": tx_count,
-            "on_time_ratio_pct": 100,            # 정시 거래(인상 스냅샷)
-            "credit_step": step,
-            "message_ko": "꾸준한 급여 입금과 정시 거래가 신용 이력으로 쌓이고 있어요.",
-            "message_local": "稳定的工资入账与按时交易正在累积为您的信用记录。",
-        }
     finally:
         conn.close()
 

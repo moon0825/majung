@@ -43,20 +43,6 @@ export const api = {
     call("/salary/deposit", { method: "POST", body: { user_id: userId, amount_krw: amountKrw } }),
   notifications: (userId) => call(`/notifications/${userId}`, { timeoutMs: 4000 }),
 
-  // v2 유학생 세그먼트 (실패 시 호출부에서 STUDENT.MOCK 으로 폴백)
-  tuitionExecute: ({ mandateId, bnfId, amountKrw, occurredAt }) =>
-    call("/student/tuition/execute", {
-      method: "POST",
-      body: {
-        mandate_id: mandateId,
-        bnf_id: bnfId,
-        amount_krw: amountKrw,
-        occurred_at: occurredAt ?? null,
-      },
-    }),
-  limitStatus: (userId) => call(`/account/limit-status/${userId}`),
-  creditProfile: (userId) => call(`/student/credit-profile/${userId}`),
-
   // 기존 엔드포인트
   executeRemittance: ({ mandateId, bnfId, amountKrw, occurredAt }) =>
     call("/remittance/execute", {
