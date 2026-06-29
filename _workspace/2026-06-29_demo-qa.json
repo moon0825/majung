@@ -1,0 +1,16 @@
+{
+  "date": "2026-06-29",
+  "agent": "demo-qa",
+  "pass": true,
+  "issues": [
+    {"item": "E-9 페르소나 식별 (이름·국기·비자)", "verdict": "통과", "note": "CustomerChat.jsx 83번: {D.USER_NAME} 🇻🇳 (E-9) 표시됨."},
+    {"item": "베트남어 WELCOME 문구", "verdict": "통과", "note": "'Chào mừng bạn đến Hàn Quốc' — 시연스크립트와 일치. lang='vi' 기본값으로 진입 즉시 노출."},
+    {"item": "대화 칩 3개 (송금·대환·철회)", "verdict": "통과", "note": "CHIPS: gửi(송금), giảm lãi(대환), Hủy ủy quyền(철회) — 3대 시나리오 완전 대응."},
+    {"item": "mandate.status active/revoked 분기", "verdict": "통과", "note": "88~93번: 삼항 연산자로 두 경로 구현됨."},
+    {"item": "도입부 페르소나 컨텍스트 ('사채 1,500만·연 30%') UI 노출", "verdict": "권고", "note": "라이브 UI에 미노출. 영상 후편집용이면 무관하나, 라이브 데모라면 진입 한 줄 컨텍스트 카드 필요. → 이번 사이클 E-9 백로그 항목으로 구현 예정."},
+    {"item": "StudentView.jsx D-2 중국어 세그먼트", "verdict": "통과", "note": "파일 존재. Wang Wei / D-2 / zh COPY 전 status 분기 완비."},
+    {"item": "3개 언어 lang 토글 구분", "verdict": "통과", "note": "vi/zh 토글, ko 병기, StudentView는 zh+ko 전용 분리. 구조 확인됨."}
+  ],
+  "gap": "도입부 페르소나 컨텍스트 ('입국 전 브로커 사채 1,500만 원·연 30%') 라이브 UI 미노출 — 심사위원이 라이브 화면만 볼 경우 페르소나 고통 전달 공백.",
+  "summary": "7항목 중 6개 통과, 1개 권고(페르소나 컨텍스트 한 줄 미노출) — 코드 결함 없음. 권고 사항 이번 사이클에 구현."
+}

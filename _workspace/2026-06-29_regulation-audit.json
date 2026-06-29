@@ -1,0 +1,14 @@
+{
+  "date": "2026-06-29",
+  "agent": "regulation-defender",
+  "pass": false,
+  "issues": [
+    {"item": "AML 임계값 (SCORE_HOLD=40, SCORE_STR=70)", "verdict": "준수", "note": "rules.py 상수 일치. mock score: PASS=0, STR=75(≥70), BLOCK=100. 완전 일치."},
+    {"item": "일 30만 원 한도계좌 처리", "verdict": "주의", "note": "seed.py is_limited_account=1이나 check_limits()가 위임장 per_tx/monthly만 검사하고 일 30만 원 한도를 별도 검증하지 않음. 데모 시연 중 실제 이체 없으므로 즉각 위반은 아니나 명시 처리 부재."},
+    {"item": "연간 5만 달러 송금 한도", "verdict": "준수", "note": "REMIT_KRW 200만×12=2400만 ≈ 1.7만 달러로 한도 내. 한도 초과 케이스 없음."},
+    {"item": "STR 결정 로직", "verdict": "준수", "note": "rules.py evaluate_aml() + orchestrator.py enqueue_str_candidate() + /str-queue 엔드포인트 구현 완료."},
+    {"item": "특금법 STR·CDD·CTR", "verdict": "준수", "note": "STR_HOLD mock 존재. CDD는 화이트리스트+신규수취인 플래그로 간접 반영. CTR 미구현이나 데모 범위 외."}
+  ],
+  "summary": "AML·STR·5만달러 한도 준수. 일 30만 원 한도계좌 처리가 명시적이지 않아 주의 — 데모 맥락상 즉각 위반 없음.",
+  "action_required": "일 30만 원 한도 처리 주석 추가 권고 (저위험, 사람 리뷰 후)"
+}

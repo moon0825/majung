@@ -1,0 +1,18 @@
+{
+  "date": "2026-06-29",
+  "agent": "number-auditor",
+  "pass": false,
+  "issues": [
+    {"field": "FX_SEED {now:18.45, ma:18.12}", "verdict": "일치", "note": "출처맵 교차 고정 수치 FX 18.12/18.45와 일치. advantagePct 1.82 산술 정합."},
+    {"field": "MOCK.refi.late_fee_apr: 0.1659", "verdict": "주의", "note": "출처맵에 late_fee_apr 직접 근거 없음. 연체 가산 개념으로 추정."},
+    {"field": "MOCK.refi.current_apr: 0.30", "verdict": "일치", "note": "출처맵 B항 '사채 30%'와 일치."},
+    {"field": "MOCK.refi.jb_apr: 0.1359", "verdict": "일치", "note": "출처맵 B항 'JB 13.59%'와 일치."},
+    {"field": "MOCK.refi.annual_saving_krw: 2_461_500", "verdict": "일치", "note": "15,000,000 × 0.1641 = 2,461,500. 출처맵 '1인당 연 246만 원'과 완전 일치."},
+    {"field": "BIZ.perCapitaSavingKrw: 2_500_000", "verdict": "불일치", "note": "MOCK.refi.annual_saving_krw(2,461,500)와 불일치. 출처맵 확정 수치 246.15만 대비 38,500원 과다. 동결 구역 수치 '연 246만'과 상충. 보류 — 사람 리뷰 필요."},
+    {"field": "BIZ.cumulativeBorrowers: 240_000", "verdict": "일치", "note": "출처맵 '누적 24만 명'과 일치."},
+    {"field": "BIZ.marketSharePct: 72", "verdict": "일치", "note": "출처맵 '외국인 신용대출 점유율 72%'와 일치."},
+    {"field": "STUDENT.FX_CNY {now:0.5296, ma:0.52}", "verdict": "주의", "note": "출처맵에 CNY/KRW 환율 근거 없음. 산술은 내부 정합하나 출처 추가 필요."}
+  ],
+  "summary": "7항목 중 5개 일치, 1개 불일치(BIZ.perCapitaSavingKrw 250만 vs 출처맵 246.15만), 2개 주의. BIZ 수치는 사람 리뷰 보류.",
+  "action_required": "BIZ.perCapitaSavingKrw → 2_461_500 수정 or 출처맵에 250만 근거 추가 (사람 리뷰 후)"
+}

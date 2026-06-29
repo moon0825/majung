@@ -189,6 +189,25 @@ main { padding: 22px 24px 40px; }
 }
 .m-bank span { font-weight: 400; font-size: 11px; opacity: 0.8; }
 .m-acct { font-size: 12px; opacity: 0.85; margin-top: 8px; }
+/* E-9 페르소나 사채 컨텍스트 한 줄 (표시 레이어, 출처: 서울경제TV 2026.3) */
+.m-persona-ctx {
+  font-size: 10.5px;
+  opacity: 0.72;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.m-persona-ctx .vi { font-style: italic; }
+.m-persona-ctx .badge {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
 .m-balance { font-size: 28px; font-weight: 800; margin-top: 2px; letter-spacing: 0.3px; }
 .m-balance small { font-size: 14px; font-weight: 600; opacity: 0.85; }
 /* 다국어 환대 인사와 언어 토글 (표시 레이어 인상용) */
