@@ -189,6 +189,18 @@ main { padding: 22px 24px 40px; }
 }
 .m-bank span { font-weight: 400; font-size: 11px; opacity: 0.8; }
 .m-acct { font-size: 12px; opacity: 0.85; margin-top: 8px; }
+/* E-9 페르소나 입국 컨텍스트 배너 (표시 전용) */
+.m-context-banner {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--hold);
+  background: var(--hold-bg);
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  margin-top: 6px;
+  display: inline-block;
+  letter-spacing: 0.2px;
+}
 .m-balance { font-size: 28px; font-weight: 800; margin-top: 2px; letter-spacing: 0.3px; }
 .m-balance small { font-size: 14px; font-weight: 600; opacity: 0.85; }
 /* 다국어 환대 인사와 언어 토글 (표시 레이어 인상용) */
