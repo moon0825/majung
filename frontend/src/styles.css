@@ -189,6 +189,7 @@ main { padding: 22px 24px 40px; }
 }
 .m-bank span { font-weight: 400; font-size: 11px; opacity: 0.8; }
 .m-acct { font-size: 12px; opacity: 0.85; margin-top: 8px; }
+.m-context { font-size: 10px; opacity: 0.72; margin-top: 3px; letter-spacing: 0.1px; font-style: italic; }
 .m-balance { font-size: 28px; font-weight: 800; margin-top: 2px; letter-spacing: 0.3px; }
 .m-balance small { font-size: 14px; font-weight: 600; opacity: 0.85; }
 /* 다국어 환대 인사와 언어 토글 (표시 레이어 인상용) */
@@ -201,6 +202,7 @@ main { padding: 22px 24px 40px; }
 }
 .m-welcome-text { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
 .m-welcome-text .vi { font-size: 13px; font-weight: 600; }
+.m-welcome-text .vi-sub { font-size: 10px; opacity: 0.78; margin-top: 1px; }
 .m-welcome-text .ko { font-size: 11px; opacity: 0.82; }
 .lang-toggle {
   display: inline-flex;
