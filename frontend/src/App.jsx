@@ -23,8 +23,11 @@ const paced = async (promise, ms) => (await Promise.all([promise, wait(ms)]))[0]
 
 const GREETING = () => [
   { id: nid(), kind: "bot",
-    vi: "Xin chào anh Minh! Tôi là Majung, trợ lý ngân hàng ủy quyền của anh.",
-    ko: "안녕하세요, 민 님. 위임형 뱅킹 에이전트 '마중'입니다." },
+    vi: "Xin chào anh Minh! Tôi là Majung, trợ lý ngân hàng ủy quyền của anh. Chào mừng anh đến Hàn Quốc! 🇻🇳",
+    ko: "안녕하세요, 민 님. 위임형 뱅킹 에이전트 '마중'입니다. 한국에 오신 것을 환영합니다!" },
+  { id: nid(), kind: "bot",
+    vi: "Tôi thấy anh đang có khoản vay lãi suất cao (1,500만 KRW, 30%/năm). Anh muốn tư vấn tái cơ cấu với lãi suất JB không?",
+    ko: "입국 전 사채(1,500만·연 30%) 기록이 있습니다. JB 대환대출 상담을 도와드릴 수 있어요." },
   { id: nid(), kind: "bot",
     vi: "Anh cần gì? Có thể nói bằng tiếng Việt.",
     ko: "무엇을 도와드릴까요? 베트남어로 말씀하셔도 됩니다." },
