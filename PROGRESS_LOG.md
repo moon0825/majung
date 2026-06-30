@@ -1,6 +1,30 @@
 # 야간 진행 로그 (최신이 위)
 
 ---
+## 사이클 브리핑 (2026-06-30 넷째 사이클, claude/finals-prototype-prep-02e3b6)
+
+**사이클 계획**: demo-qa 위험-2 코드 확인(읽기전용) + 발표덱 B2 표·근거주의 em dash 5건 화법 정리 (문서만)
+
+### 한 일
+| # | 작업 | 결과 |
+|---|------|------|
+| 1 | demo-qa 위험-2 확인: `frontend/src/styles.css:243` `.card-auto { animation: rise 0.28s ease-out, auto-glow 1.6s ease-out 0.15s; }` — 런북 "1.6초 글로우" 표기와 정확히 일치. 코드 변경 없음, 읽기전용 확인으로 위험 해소 | ✅ 확인 완료 |
+| 2 | `docs/본선_발표덱.md` em dash 5건(섹션 헤더 1 + B2 표 3 + 근거주 1) 제거 — 마침표/콜론으로 교체, 내용·수치 무변경, 화법 가이드 em dash 금지 규칙 준수 | ✅ 문서 |
+
+### 통과·실패
+- 동결구역: 무변경 ✅ (docs/만 수정)
+- 수치: 무변경 ✅ (출처맵 대조 불필요 — 수치 미포함 편집)
+- 화법 가이드 준수: em dash 0건으로 정리, 능동·단언 유지 ✅
+- 빌드: `cd frontend && npx vite build --outDir /tmp/nightly-build --emptyOutDir` → 37 모듈 ✅
+- 테스트: `cd backend && python3 -m pytest -q` → 40 passed ✅
+
+### 다음 사이클 제안
+1. 백로그 저위험 항목 사실상 소진(남은 `- [ ]` 1건은 미완료 `[!→리뷰]` 엔드포인트에 종속, 사람 리뷰 대기)
+2. 사람 직접: `pip install python-pptx && python docs/build_pptx.py` (라이브러리 추가 동결로 자동 처리 불가)
+3. 사람 직접: 본선 드라이런 `python -m app.seed → uvicorn 8000 → npm run dev → 브라우저 5173`
+4. D-4(7/1~2): ③·④ 녹화 파일 선택적 촬영 or 오프라인 목으로 갈음 결정, 7/1 법무 검증 후 B5·Q1 최종 확정
+
+---
 ## 사이클 브리핑 (2026-06-30 셋째 사이클, claude/finals-prototype-prep-02e3b6)
 
 **사이클 계획**: demo-qa 위험-1 대응 — 시연스크립트.md 녹화 폴백 표에 ③·④ 행 추가 (문서만, 코드 무변경)
