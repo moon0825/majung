@@ -1,0 +1,64 @@
+{
+  "run_date": "2026-06-30",
+  "agent": "number-auditor",
+  "PASS": [
+    {
+      "item": "FX 고정 수치 — MA 18.12",
+      "detail": "seed.py _FX_HISTORY 합계 126.84/7=18.12, demoData.js FX_SEED.ma=18.12 — 일치"
+    },
+    {
+      "item": "FX 고정 수치 — 현재 18.45",
+      "detail": "seed.py _FX_NOW=18.45, demoData.js FX_SEED.now=18.45 — 일치"
+    },
+    {
+      "item": "대환 금리 — 사채 연 30%",
+      "detail": "seed.py loans_external apr=0.30, demoData.js MOCK.refi.current_apr=0.30, BIZ.loanSharkApr=0.30, 출처맵 B '사채 30%' — 4자 일치"
+    },
+    {
+      "item": "대환 금리 — JB 연 13.59%",
+      "detail": "seed.py refi_products apr=0.1359, demoData.js MOCK.refi.jb_apr=0.1359, BIZ.jbRefiApr=0.1359, 출처맵 B 'JB 13.59%' — 4자 일치"
+    },
+    {
+      "item": "연 절약액 계산 정합성",
+      "detail": "1,500만×(0.30-0.1359)=2,461,500원. rules.py round(principal*(current_apr-jb_apr))=2,461,500, demoData.js MOCK.refi.annual_saving_krw=2_461_500, 출처맵 B '246.15만' — 3자 일치"
+    },
+    {
+      "item": "AML 컷 — 주의 40 / 위험 70",
+      "detail": "rules.py SCORE_HOLD=40, SCORE_STR=70 — 코드 내 확인"
+    },
+    {
+      "item": "대환 잔액 추정 — 693억",
+      "detail": "demoData.js BIZ.refiBalanceKrw=69_300_000_000, 출처맵 B '대환 잔액 693억' — 일치"
+    },
+    {
+      "item": "연 이자 추정 — 66.5억",
+      "detail": "demoData.js BIZ.annualInterestKrw=6_650_000_000, 출처맵 B '연 이자 66.5억' — 일치"
+    }
+  ],
+  "MISMATCH": [
+    {
+      "item": "1인당 절약액 — BIZ 콘솔 표시값 vs 실계산값",
+      "expected": "2,461,500원 (출처맵 B '246만원', MOCK.refi.annual_saving_krw=2_461_500)",
+      "actual": "demoData.js BIZ.perCapitaSavingKrw = 2_500_000 (250만원)",
+      "delta": "+38,500원 (+1.57%) 과대",
+      "files": [
+        "frontend/src/demoData.js line 172 perCapitaSavingKrw: 2_500_000",
+        "docs/출처맵.md line 31 1인당 연 246만 원 절약",
+        "frontend/src/demoData.js line 93 annual_saving_krw: 2_461_500"
+      ],
+      "action": "BIZ.perCapitaSavingKrw를 2_461_500으로 수정 → 이번 사이클 수정 완료"
+    }
+  ],
+  "WARNING": [
+    {
+      "item": "출처맵에 AML 컷(40/70) 항목 부재",
+      "detail": "rules.py에 SCORE_HOLD=40·SCORE_STR=70이 정의되어 있으나 출처맵 A/B에 AML 임계값 출처 미기재",
+      "action": "출처맵 B에 'AML 스코어 임계값 40(보류)/70(STR) — 자체 설계(KoFIU 가이드라인 준용)' 행 추가 권장 → 다음 사이클"
+    },
+    {
+      "item": "출처맵 '1인 대환 150만(모집단 평균)' vs seed.py '1,500만(시연 캐릭터 원금)' 10배 차이 표기",
+      "detail": "독자 혼동 가능성. 두 수치가 다른 개념임을 출처맵에 명시 필요",
+      "action": "출처맵 B 주석 추가 권장 → 다음 사이클"
+    }
+  ]
+}

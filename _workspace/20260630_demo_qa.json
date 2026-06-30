@@ -1,0 +1,30 @@
+{
+  "run_date": "2026-06-30",
+  "agent": "demo-qa",
+  "ok": [
+    "E-9 페르소나: CustomerChat.jsx 헤더에 'Tran Van Minh 🇻🇳 (E-9)' 명시 (line 83)",
+    "유학생 페르소나: StudentView.jsx 별도 컴포넌트, Wang Wei / D-2비자 분리 (App.jsx 탭 student, demoData.js STUDENT)",
+    "단축키 1~5: App.jsx Digit1~5 + Numpad1~5 모두 각 액션에 매핑",
+    "F키 패널 토글: App.jsx KeyF → setFilm 토글, ControlPanel onToggleFilm 버튼 병행",
+    "재시드 버튼: ControlPanel.jsx '피드 초기화 (재촬영용)' 버튼 존재",
+    "Gate A/B/C 카드: Cards.jsx GatePills 컴포넌트 ['A','B','C'] 3개 게이트 렌더링; AdminDashboard 트레이스 테이블도 동일",
+    "사업가치 콘솔 수치: refiBalanceKrw=69,300,000,000(693억 원), annualInterestKrw=6,650,000,000(66.5억 원) 정확히 일치; fmtEok 함수 올바르게 '억 원' 단위 변환"
+  ],
+  "issue": [
+    {
+      "item": "베트남어 고정 발화 불일치",
+      "detail": "시연스크립트.md V1='Lương về thì gửi cho mẹ, khi tỷ giá tốt, tối đa 2 triệu.' vs demoData.js SCRIPT_REMIT='Khi có lương, nếu tỷ giá tốt, gửi 2 triệu KRW cho mẹ tôi nhé.' — 촬영 고정 스크립트와 CHIP이 다른 문장",
+      "files": [
+        "frontend/src/demoData.js line 27",
+        "docs/시연스크립트.md line 11"
+      ],
+      "action": "어느 쪽을 공식 발화로 통일할지 사람 확인 필요 — 이번 사이클 건드리지 않음"
+    }
+  ],
+  "missing": [
+    {
+      "item": "베트남어 V2~V10 CHIPS 미연결",
+      "detail": "시연스크립트 규정 10문장 중 V2~V10은 CHIPS/SCRIPT 상수로 바인딩 없음. 진행자가 직접 입력 또는 구술해야 함. 촬영 편의를 위해 의도인지 누락인지 확인 권장."
+    }
+  ]
+}

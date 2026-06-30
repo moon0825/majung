@@ -1,0 +1,44 @@
+{
+  "run_date": "2026-06-30",
+  "agent": "regulation-defender",
+  "compliant": [
+    {
+      "item": "STR(의심거래보고) 트리거 — AML 스코어 ≥ 70 시 STR_HOLD",
+      "evidence": "rules.py SCORE_STR=70. evaluate_aml()에서 score>=SCORE_STR 시 AmlDecision('STR_HOLD') 반환. orchestrator.py aml['decision']=='STR_HOLD' 분기에서 enqueue_str_candidate() 호출 후 str_hold 상태 반환. 로직 완비."
+    },
+    {
+      "item": "CDD(고객확인의무) — 수취인 화이트리스트 + 새 수취인 체크",
+      "evidence": "mcp_tools.py screen_beneficiary_aml()에서 DB beneficiaries.is_whitelisted 조회, is_whitelisted=True 시 AML 스코어 -40. is_new_beneficiary(first_seen IS NULL) 시 +25 가산. Gate C에서 통합 판정. 완비."
+    },
+    {
+      "item": "위임장(Mandate) — busyRef/lock 중복 실행 방지",
+      "evidence": "App.jsx busyRef(useRef(false)), lock()은 busyRef.current=true면 즉시 false 반환. 모든 실행 콜백에서 lock() 선행 호출. 단일 실행 경로 보장."
+    },
+    {
+      "item": "연체 가산금리(late_fee_apr) — 0.1659",
+      "evidence": "demoData.js late_fee_apr=0.1659. rules.py late_fee_apr=round(jb_apr+LATE_FEE_SPREAD,4), LATE_FEE_SPREAD=0.03, 0.1359+0.03=0.1659 일치."
+    },
+    {
+      "item": "오프라인 폴백 — healthRef 분기",
+      "evidence": "App.jsx healthRef=useRef(false). api.health() 응답으로 8초 폴링 갱신. 전 실행 경로에서 healthRef.current 분기로 MOCK 폴백 처리. 완비."
+    }
+  ],
+  "non_compliant": [
+    {
+      "item": "CTR(고액현금거래) — 외국인 거주자 무증빙 송금 연 5만 달러 한도 로직 미구현",
+      "evidence": "check_limits()는 건당/월간만 검사. 연간 USD 누적 합산 필드 schema.sql에 부재. 출처맵.md §A '외국인 거주자 무증빙 송금 연 5만 달러 한도 — 은행연합회 외환길잡이'로 규제 출처 명시되나 코드 미구현.",
+      "risk": "규제 위반 가능성 — 외환거래법상 의무 한도 미적용",
+      "action": "동결구역 인접(게이트 로직). 이번 사이클 건드리지 않음. 사람 리뷰 필요. [!] 보류 항목으로 처리."
+    }
+  ],
+  "warning": [
+    {
+      "item": "AML 늦은 밤(late_night) 가산점 0점 처리",
+      "detail": "rules.py late_night 가중치=0. 교대근무 외국인 오탐 방지 목적. KoFIU STR 가이드라인상 새벽 거래 의심 지표 가산 권장. 근거 문서 필요."
+    },
+    {
+      "item": "whitelist -40 적용 후 score=max(score,0) 처리",
+      "detail": "화이트리스트(-40)+고액(+20) 조합 시 음수→0 올림. 추후 가중치 조정 시 의도치 않은 무조건 PASS 가능. 테스트 케이스 보강 권고."
+    }
+  ]
+}
