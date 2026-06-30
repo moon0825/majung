@@ -46,7 +46,7 @@ export default function BusinessValuePanel() {
         <div className="biz-kpi accent">
           <div className="k">고객 1인당 연 절약액</div>
           <div className="v">{fmtEok(b.perCapitaSavingKrw)}</div>
-          <div className="d">사채 연 {(b.loanSharkApr * 100).toFixed(1)}% → JB 연 {(b.jbRefiApr * 100).toFixed(2)}%</div>
+          <div className="d">사채 연 {(b.loanSharkApr * 100).toFixed(2)}% → JB 연 {(b.jbRefiApr * 100).toFixed(2)}%</div>
         </div>
       </div>
 
@@ -69,7 +69,7 @@ export default function BusinessValuePanel() {
           </div>
         </div>
         <div className="pl-note">
-          사채 연 {(b.loanSharkApr * 100).toFixed(1)}%에서 JB 연 {(b.jbRefiApr * 100).toFixed(2)}%로 전환할 때의 효과. 생애가치(LTV)는 전환 잔액과 이자수익으로 측정함
+          사채 연 {(b.loanSharkApr * 100).toFixed(2)}%에서 JB 연 {(b.jbRefiApr * 100).toFixed(2)}%로 전환할 때의 효과. 생애가치(LTV)는 전환 잔액과 이자수익으로 측정함
         </div>
       </div>
 
@@ -81,7 +81,7 @@ export default function BusinessValuePanel() {
             <li><b>대환 전환율 {pct(b.refiConversionRate)}</b>: 휴면 다운로드와 기존 외국인 고객 가운데 대환 적격 전환 비율 가정</li>
             <li><b>대환 전환 잔액 {fmtEok(b.refiBalanceKrw)}</b>: 누적 차주 {(b.cumulativeBorrowers / 10000).toFixed(0)}만 명 × 대환 침투율 가정 × 1인당 평균 대환 잔액으로 산출. {fmtEok(b.refiBalanceKrw)}은 기본 시나리오 추정이며, 침투율 가정을 낮추면 보수, 높이면 낙관 시나리오임</li>
             <li><b>연 이자수익 {fmtEok(b.annualInterestKrw)}</b>: 전환 잔액에 JB 대환 금리 스프레드를 적용한 값</li>
-            <li><b>1인당 연 {fmtEok(b.perCapitaSavingKrw)}</b>: 사채 연 {(b.loanSharkApr * 100).toFixed(1)}%와 JB 연 {(b.jbRefiApr * 100).toFixed(2)}%의 이자 차이(치트시트 확정값)</li>
+            <li><b>1인당 연 {fmtEok(b.perCapitaSavingKrw)}</b>: 사채 연 {(b.loanSharkApr * 100).toFixed(2)}%와 JB 연 {(b.jbRefiApr * 100).toFixed(2)}%의 이자 차이(치트시트 확정값)</li>
           </ul>
           <p className="biz-src-note">최종 승인과 실제 실행 잔액은 JB 심사엔진 결과에 따릅니다.</p>
         </div>

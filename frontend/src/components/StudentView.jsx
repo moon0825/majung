@@ -178,8 +178,8 @@ export default function StudentView({ healthy }) {
           <div className="grad-ready">
             <span className="done-chip">가심사 적격 · 가등급 B</span>
           </div>
-          <div className="student-msg">졸업하고 취업 비자로 전환하면, 재학 중 쌓은 급여와 거래 이력으로 대환 가심사를 바로 진행할 수 있습니다.</div>
-          <div className="student-msg ko">毕业并转换工作签证时，可凭在学期间积累的工资与交易记录直接进行贷款预审。</div>
+          <div className="student-msg">毕业并转换工作签证时，可凭在学期间积累的工资与交易记录直接进行贷款预审。</div>
+          <div className="student-msg ko">졸업하고 취업 비자로 전환하면, 재학 중 쌓은 급여와 거래 이력으로 대환 가심사를 바로 진행할 수 있습니다.</div>
           <div className="student-note"><b>최종 승인은 전북은행 심사엔진의 배타적 권한</b>입니다.</div>
         </section>
       </div>

@@ -199,7 +199,7 @@ function OutcomeCard({ item, actions, mandate, lang }) {
             <span className="apr-chip new">
               Tỷ giá {fmtPct(fx.advantagePct ?? D.FX_SEED.advantagePct)} so TB 7 ngày
             </span>
-            <span className="ko">7일평균 {fx.rateMa ?? D.FX_SEED.ma} → 현재 {fx.rateNow ?? D.FX_SEED.now}</span>
+            <span className="ko">7일평균 {(fx.rateMa ?? D.FX_SEED.ma).toFixed(2)} → 현재 {(fx.rateNow ?? D.FX_SEED.now).toFixed(2)}</span>
           </div>
           <GatePills outcome={o} />
           <Bi vi={o.message_local} ko={o.message_ko} />
@@ -358,7 +358,7 @@ function RefiCard({ item, actions }) {
       </div>
       <div className="card-body">
         <div className="apr-compare">
-          <span className="apr-chip old">{o.lender} 연 {(o.current_apr * 100).toFixed(1)}%</span>
+          <span className="apr-chip old">{o.lender} 연 {(o.current_apr * 100).toFixed(2)}%</span>
           <span className="apr-arrow">→</span>
           <span className="apr-chip new">{o.jb_product} 연 {(o.jb_apr * 100).toFixed(2)}%</span>
         </div>
