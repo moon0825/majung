@@ -1,5 +1,10 @@
 # 야간 진행 로그 (최신이 위)
 
+<!-- 사이클 계획 2026-06-30 #2 -->
+사이클 계획: 하루 1회 풀 검증(number-auditor·regulation-defender·demo-qa) — number-auditor FAIL 1건(perCapitaSavingKrw 불일치) 교정
+
+- 2026-06-30 #2 · 풀 검증 3종 + 수치 교정 · number-auditor: BIZ.perCapitaSavingKrw 2,500,000→2,461,500 (출처맵 §B 산식 2,461,500 일치), regulation-defender: Gate A→B→C·STR 40/70·throw 계약 PASS, demo-qa: E-9 페르소나·베트남어 인사·aria PASS · 결과: _workspace/2026-06-30-fullcheck.md 저장 · 검증: vite build 39모듈 그린 / pytest 29 통과 · 백로그 중복 현황: PR #1에 계열사 시너지·Q&A카드·런북·접근성·테스트, PR #10에 발표덱 초안 — 신규 작업 건너뜀 · 다음 사이클 제안: PR #1 사람 리뷰·머지 후 백로그 잔여 항목 [x] 처리; 머지 전에는 접근성 패스 독립 확인 또는 백테스트 보강 시도
+
 <!-- 사이클 계획 2026-06-30 -->
 사이클 계획: E-9 페르소나 첫 장면 — CustomerChat 헤더 베트남어 인사 강화 + "입국 전 사채 1,500만·연 30%" 한 줄 추가 (표시 레이어, vite build 검증)
 
