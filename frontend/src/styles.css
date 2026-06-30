@@ -225,6 +225,12 @@ main { padding: 22px 24px 40px; }
   color: var(--jb-navy);
   opacity: 1;
 }
+.m-persona-note {
+  font-size: 10.5px;
+  opacity: 0.70;
+  margin-top: 5px;
+  letter-spacing: 0.1px;
+}
 .m-chips { margin-top: 8px; display: flex; gap: 6px; }
 .m-chip {
   font-size: 11px;
