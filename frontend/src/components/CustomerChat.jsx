@@ -12,10 +12,20 @@ const CHIPS = [
 // 다국어 인상용 환대 인사. 근로자는 베트남어가 기본, 유학생 등 보편성은 중국어 한 컷으로 보인다.
 // 완전 번역이 아니라 주고객 나라에서 그대로 쓰겠다는 감만 주는 표시 레이어 토글이다.
 const WELCOME = {
-  vi: { main: "Chào mừng bạn đến Hàn Quốc", label: "Tiếng Việt" },
+  vi: {
+    main: "Chào mừng! JB Majung đồng hành cùng bạn",
+    sub: "Từ ngày đầu đến Hàn Quốc, chúng tôi luôn ở bên bạn",
+    label: "Tiếng Việt",
+  },
   zh: { main: "欢迎您来到韩国", label: "中文" },
 };
 const WELCOME_KO = "마중: 한국에 오신 분을 먼저 나가 맞이합니다";
+
+// E-9 페르소나 첫 장면: 입국 전 고통(사채) → 마중 해결 맥락. 출처맵.md A항 범위(1,500만~2,000만·연 20~40%).
+const PAIN_BANNER = {
+  ko: "입국 전 브로커 사채 1,500만 · 연 30%",
+  vi: "Vay nóng 15 triệu KRW · lãi 30%/năm",
+};
 
 export default function CustomerChat({ feed, busy, balance, mandate, actions }) {
   const [input, setInput] = useState("");
@@ -68,9 +78,14 @@ export default function CustomerChat({ feed, busy, balance, mandate, actions }) 
         <div className="m-bank">
           JB 마중 <span>JB Bravo KOREA 안의 위임형 뱅킹 에이전트</span>
         </div>
+        <div className="m-pain" aria-label="서비스 도입 배경">
+          <span className="m-pain-label">{lang === "vi" ? PAIN_BANNER.vi : PAIN_BANNER.ko}</span>
+          <span className="m-pain-arrow">→ JB 마중</span>
+        </div>
         <div className="m-welcome">
           <div className="m-welcome-text">
             <span className="vi">{WELCOME[lang].main}</span>
+            {WELCOME[lang].sub && <span className="vi-sub">{WELCOME[lang].sub}</span>}
             <span className="ko">{WELCOME_KO}</span>
           </div>
           <div className="lang-toggle" role="group" aria-label="언어 선택 / Ngôn ngữ / 语言">
