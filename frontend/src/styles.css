@@ -225,6 +225,17 @@ main { padding: 22px 24px 40px; }
   color: var(--jb-navy);
   opacity: 1;
 }
+/* E-9 페르소나 첫 장면: 베트남어 인사 부제 + 사채 컨텍스트 (표시 전용) */
+.m-welcome-text .vi-sub { font-size: 11px; opacity: 0.88; font-style: italic; }
+.m-e9-hint {
+  font-size: 10.5px;
+  margin-top: 5px;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  padding: 3px 9px;
+  color: rgba(255, 255, 255, 0.88);
+  letter-spacing: 0.1px;
+}
 .m-chips { margin-top: 8px; display: flex; gap: 6px; }
 .m-chip {
   font-size: 11px;
