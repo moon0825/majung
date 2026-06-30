@@ -41,15 +41,21 @@ function Bi({ vi, ko }) {
 
 function GatePills({ outcome }) {
   return (
-    <div className="gates">
+    <div className="gates" role="list" aria-label="3중 게이트 판정 결과">
       {["A", "B", "C"].map((g) => {
         const c = gateCell(outcome, g);
         return (
-          <span key={g} className={`gate-pill ${c.cls}`}>
+          <span key={g} role="listitem" className={`gate-pill ${c.cls}`}
+            aria-label={`Gate ${g} ${GATE_NAME[g]}: ${c.text}`}>
             Gate {g} {GATE_NAME[g]} · {c.text}
           </span>
         );
       })}
+      {/* 특금법 3종 완비 신호 (CDD 고객확인 · CTR 고액현금거래보고). 계좌이체라 CTR 비대상. */}
+      <span role="listitem" className="gate-pill na" aria-label="특금법 고객확인의무(CDD) 완료"
+        title="특금법 고객확인의무(CDD)">CDD 고객확인 완료</span>
+      <span role="listitem" className="gate-pill na" aria-label="고액현금거래보고(CTR) 비대상: 계좌이체"
+        title="특금법 고액현금거래보고(CTR)">CTR 비대상(계좌이체)</span>
     </div>
   );
 }
@@ -202,6 +208,12 @@ function OutcomeCard({ item, actions, mandate, lang }) {
             <span className="ko">7일평균 {fx.rateMa ?? D.FX_SEED.ma} → 현재 {fx.rateNow ?? D.FX_SEED.now}</span>
           </div>
           <GatePills outcome={o} />
+          {/* 접근매체 비보유·미양도 상시 배지 (전금법 제6조③ 대응) */}
+          <div className="mandate-badges" aria-label="접근매체 법적 안전장치 설명">
+            <span className="mandate-badge" title="마중은 접근매체(비번·OTP·인증서)를 보유하지 않습니다">접근매체 미보유·미양도</span>
+            <span className="mandate-badge" title="고객 사전 등록 오픈뱅킹/자동이체 권한으로 실행">사전약정 자동이체</span>
+            <span className="mandate-badge" title="실행 주체는 JB 코어뱅킹">실행은 JB 코어뱅킹</span>
+          </div>
           <Bi vi={o.message_local} ko={o.message_ko} />
           {o.tx_id && (
             <div className="note">TX <span className="mono">{o.tx_id}</span> · 한패스 레일(모의) · 건별 통지 완료</div>
@@ -391,10 +403,17 @@ function RefiCard({ item, actions }) {
           연체 시 가산금리 적용·신용점수 하락 등 불이익이 있습니다. ({o.grade} · {o.decision})
         </div>
 
+        {/* 가심사 워터마크 배지 (금소법 설명의무 모의) */}
+        <div className="refi-watermark" aria-label="가심사 법적 고지">
+          <span className="refi-wm-badge">⚠ 가심사(예비) — 승인 아님</span>
+          <span className="refi-wm-badge">법무검수 고정 템플릿 (LLM 자유생성 아님)</span>
+          <span className="refi-wm-badge">최종 승인 = JB 심사엔진</span>
+        </div>
         {item.applied ? (
-          <span className="done-chip">Đã nộp đơn · 신청 접수됨</span>
+          <span className="done-chip" role="status">Đã nộp đơn · 신청 접수됨</span>
         ) : (
           <button className="btn btn-primary" disabled={item.applying}
+            aria-label="JB 전북은행 대환 심사엔진에 신청"
             onClick={() => actions.refer(item.id, o)}>
             {item.applying ? "Đang nộp…" : "Nộp đơn cho JB"}
             <span className="ko-btn">JB에 신청</span>
