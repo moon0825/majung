@@ -233,6 +233,7 @@ main { padding: 22px 24px 40px; }
   padding: 4px 10px;
 }
 .m-chip.revoked { background: rgba(192, 57, 43, 0.55); }
+.m-chip.m-chip-debt { background: rgba(154, 103, 0, 0.22); color: #ffe4b0; font-weight: 700; }
 
 /* 채팅 영역 */
 .chat {
