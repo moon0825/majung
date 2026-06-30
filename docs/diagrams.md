@@ -166,3 +166,33 @@ sequenceDiagram
     ORC->>JB: refer_to_jb_engine (승인 아님·회부) [후속액션]
     JB-->>U: 접수번호
 ```
+
+---
+
+## 7. 망분리 데이터 흐름 — 외부 LLM 경계 (발표덱 B3)
+
+> 금융위 2024.8 「망분리 개선 로드맵」(생성형 AI 활용 허용·SaaS 확대)이 허용하는 범위 안에서만 외부 LLM을 쓴다.
+> 망 경계를 넘는 것은 고객의 자연어 발화뿐이다. 계좌·실명·금액은 분리된 결정적 코드 내부에서만 다룬다.
+
+```mermaid
+flowchart LR
+    subgraph OUT["망 외부 — 외부 LLM"]
+        Speech["고객 발화(자연어)<br/>예: '월급 오면 엄마한테'"]
+        Parse["🧠 LLM 의도 파싱<br/>구조화된 intent(후보)만 산출"]
+        Speech --> Parse
+    end
+
+    subgraph IN["망 내부 — 결정적 코드"]
+        Core["계좌·실명·금액·잔액<br/>(식별정보, 망 내부 고정)"]
+        Gate["3중 게이트(A/B/C)<br/>판정·실행"]
+        Core --> Gate
+    end
+
+    Parse -- "intent(파라미터 후보)만 전달<br/>식별정보 미포함" --> Gate
+    Gate -. "재검증 없이는<br/>LLM 출력을 신뢰하지 않음" .-> Parse
+
+    style OUT fill:#fff3e0,stroke:#e8910c
+    style IN fill:#eef5ff,stroke:#9cc2e5
+```
+
+> 도구별 권한·스코프는 MCP 화이트리스트로 통제하고, 실행은 게이트 통과 후에만 일어난다. (근거: `docs/본선_QnA_방어카드.md` Q10)
