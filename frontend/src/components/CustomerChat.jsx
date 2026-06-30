@@ -12,10 +12,16 @@ const CHIPS = [
 // 다국어 인상용 환대 인사. 근로자는 베트남어가 기본, 유학생 등 보편성은 중국어 한 컷으로 보인다.
 // 완전 번역이 아니라 주고객 나라에서 그대로 쓰겠다는 감만 주는 표시 레이어 토글이다.
 const WELCOME = {
-  vi: { main: "Chào mừng bạn đến Hàn Quốc", label: "Tiếng Việt" },
+  vi: { main: "Xin chào anh Minh! Chúng tôi luôn đồng hành cùng anh tại Hàn Quốc.", label: "Tiếng Việt" },
   zh: { main: "欢迎您来到韩国", label: "中文" },
 };
 const WELCOME_KO = "마중: 한국에 오신 분을 먼저 나가 맞이합니다";
+
+// E-9 페르소나 첫 진입 컨텍스트 — 브로커 사채 배경(표시 레이어만, 수치는 고정값)
+const PERSONA_CONTEXT = {
+  vi: "Vay môi giới khi nhập cảnh: 15 triệu KRW · lãi 30%/năm",
+  ko: "입국 시 브로커 사채 1,500만 · 연 30%",
+};
 
 export default function CustomerChat({ feed, busy, balance, mandate, actions }) {
   const [input, setInput] = useState("");
@@ -81,6 +87,10 @@ export default function CustomerChat({ feed, busy, balance, mandate, actions }) 
           </div>
         </div>
         <div className="m-acct">{D.ACCOUNT_ID} · {D.USER_NAME} 🇻🇳 (E-9)</div>
+        <div className="m-persona-context">
+          <span className="ctx-vi">{PERSONA_CONTEXT.vi}</span>
+          <span className="ctx-ko">{PERSONA_CONTEXT.ko}</span>
+        </div>
         <div className="m-balance">
           {fmtNum(balance)} <small>KRW</small>
         </div>
