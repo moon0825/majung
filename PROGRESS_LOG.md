@@ -1,6 +1,29 @@
 # 야간 진행 로그 (최신이 위)
 
 ---
+## 사이클 브리핑 (2026-06-30 여섯째 사이클, claude/finals-prototype-prep-02e3b6)
+
+**사이클 계획**: 직전 사이클 제안 반영 — 본선_QnA_방어카드.md 잔여 em dash 화법 패스 (문서만)
+
+### 한 일
+| # | 작업 | 결과 |
+|---|------|------|
+| 1 | `docs/본선_QnA_방어카드.md` em dash 7건 전부 제거(제목 1, Q9 제목 1·본문 1, Q10 본문 2, Q12 본문 1, Q15 근거주 1) — 마침표 분리 또는 쉼표로 교체, 내용·수치 무변경 | ✅ 문서 |
+
+### 통과·실패
+- 동결구역: 무변경 ✅ (docs/만 수정)
+- 수치: 무변경 ✅ (수치 미포함 편집, 출처맵 대조 불필요)
+- 화법 가이드 준수: em dash `grep -c "—"` → 0건 ✅
+- 빌드: 클라우드 환경 의존성 재설치(`npm install`, `pip install -r requirements.txt`) 후 `npx vite build --outDir /tmp/nightly-build --emptyOutDir` → 37 모듈 ✅
+- 테스트: `python3 -m pytest -q` → 40 passed ✅
+
+### 다음 사이클 제안
+1. 저위험 백로그·화법 잔여 항목 사실상 소진 — 신규 저위험 후보 없으면 사이클을 가볍게 넘기거나 풀 검증 재확인으로 전환
+2. 사람 직접: `pip install python-pptx && python docs/build_pptx.py` (라이브러리 추가 동결로 자동 처리 불가)
+3. 사람 직접: 본선 드라이런 `python -m app.seed → uvicorn 8000 → npm run dev → 브라우저 5173`
+4. D-4(7/1~2): 7/1 법무 검증(전자서명 효력) 후 Q1·B5 최종 확정, ③·④ 녹화 파일 선택 촬영 여부 결정
+
+---
 ## 사이클 브리핑 (2026-06-30 다섯째 사이클, claude/finals-prototype-prep-02e3b6)
 
 **사이클 계획**: regulation-defender 위험-2 잔여 대응 — QnA Q3 "구조화 탐지" 표현이 코드 실태(점수 가산 필드만 존재, 실탐지 로직 없음)와 정확히 일치하도록 재정정 (문서만)
