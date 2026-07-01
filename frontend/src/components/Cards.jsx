@@ -26,9 +26,9 @@ function GatePills({ outcome }) {
           </span>
         );
       })}
-      {/* 특금법 3종 완비 신호 (CDD 고객확인 · CTR 고액현금거래보고). 계좌이체라 CTR 비대상. */}
-      <span role="listitem" className="gate-pill na" aria-label="특금법 고객확인의무(CDD) 완료"
-        title="특금법 고객확인의무(CDD)">CDD 고객확인 완료</span>
+      {/* 특금법 대응 신호. CDD는 구조 구현·실서비스 JB 활성화(과장 금지). 계좌이체라 CTR 비대상. */}
+      <span role="listitem" className="gate-pill na" aria-label="특금법 고객확인의무(CDD) 구조 구현, 실서비스 JB 활성화"
+        title="특금법 고객확인의무(CDD)">CDD 구조 갖춤</span>
       <span role="listitem" className="gate-pill na" aria-label="고액현금거래보고(CTR) 비대상: 계좌이체"
         title="특금법 고액현금거래보고(CTR)">CTR 비대상(계좌이체)</span>
     </div>
