@@ -3,6 +3,29 @@
 ---
 ## 사이클 브리핑 (2026-07-01, claude/finals-prototype-prep-02e3b6)
 
+**사이클 계획**: 직전 사이클 제안 반영 — `_workspace/발표덱_v5.md` 잔여 화면 표시 리스크 중 사실관계가 명확한 STR 큐 상태 배지 raw 'queued' 노출 1건만 처리(CDD/CTR 배지 문구는 덱이 이미 "동결 해제 시" 반영으로 명시적 보류해 이번엔 제외). 오늘(7/1) 풀 검증은 최근 3일(6/28~6/30) 내 이미 기록돼 있어 재실행 생략(OVERNIGHT_ROUTINE §7).
+
+### 한 일
+| # | 작업 | 결과 |
+|---|------|------|
+| 1 | `frontend/src/components/AdminDashboard.jsx:209` STR 큐 상태 배지 — `r.status === "pending"` 단일 조건을 `(r.status === "pending" \|\| r.status === "queued")`로 확장. 실제 적재값(`backend/app/mcp_tools.py:311` enqueue_str_candidate)이 'queued'임을 확인 후 표시만 매핑, DB·판정값 무변경 | ✅ 코드 |
+| 2 | `_workspace/발표덱_v5.md` 해당 리스크 항목을 "해결(7/1 야간 사이클)"로 갱신 | ✅ 문서 |
+
+### 통과·실패
+- 동결구역: 무변경 ✅. `enqueue_str_candidate`는 프리즈 대상 함수(execute_remittance·screen_beneficiary_aml)가 아니고, AdminDashboard는 표시 레이어(6/27부터 반복 수정 이력 있음)
+- 수치: 신규 수치 없음, 대조 불필요 ✅
+- 화법: 코드 1줄 조건 확장 + 기존 문서 문형 재사용, 신규 서술 문장 없음 ✅
+- 빌드: 클라우드 환경 재설치(`npm install --prefer-offline`) 후 `npx vite build --outDir /tmp/nightly-build --emptyOutDir` → 37 모듈 ✅
+- 테스트: `pip install -r requirements.txt` 후 `python3 -m pytest -q` → 40 passed ✅
+
+### 다음 사이클 제안
+1. `_workspace/발표덱_v5.md` 화면 표시 리스크 4건 중 2건(폐기 수치·STR queued) 해결. 잔여 2건: GatePills CDD/CTR 배지 문구(덱이 "동결 해제 시" 반영으로 명시 보류 — 건드리지 말 것), 월 상환액 40원 오차(오프라인 목 vs 라이브 40원 차이, 재촬영 시 한쪽 통일 — 사람의 촬영 선택 사항이라 코드로 "고칠" 대상 아님. 자동 처리 금지)
+2. NIGHTLY_BACKLOG 저위험 항목은 계속 소진 상태. 신규 후보 없으면 다음 사이클은 4-idle로 가볍게 넘길 것
+3. 사람 대기: pip install python-pptx && python docs/build_pptx.py(BIZ 값 변경 반영해 재생성 권장) · 본선 드라이런 · 7/1 법무검증(전자서명) 후 Q1·B5 확정 · PR 리뷰·머지
+
+---
+## 사이클 브리핑 (2026-07-01, claude/finals-prototype-prep-02e3b6)
+
 **사이클 계획**: 직전 사이클(발표덱 v5 초안, 85b4871)이 코드 리스크로 지목한 항목 중 동결 구역이 아닌 것 1건만 처리 — BusinessValuePanel 거시 KPI(693억·66.5억·7%)가 출처맵.md 폐기 선언 값 그대로 살아있어 같은 화면 시나리오 토글(기준 7%=48억)과 모순되던 것을 정정.
 
 ### 한 일

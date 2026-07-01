@@ -206,7 +206,7 @@ export default function AdminDashboard({ traces, mandate, healthy, active }) {
                         {flags.map((f) => <span key={f} className="flag-chip">{flagKoWeighted(f)}</span>)}
                       </div>
                     </td>
-                    <td><span className="badge hold">{r.status === "pending" ? "심사대기" : r.status}</span></td>
+                    <td><span className="badge hold">{(r.status === "pending" || r.status === "queued") ? "심사대기" : r.status}</span></td>
                     <td>
                       {strActions[r.id] ? (
                         <div className="str-done">
