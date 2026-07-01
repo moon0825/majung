@@ -1,6 +1,28 @@
 # 야간 진행 로그 (최신이 위)
 
 ---
+## 사이클 브리핑 (2026-07-01, claude/finals-prototype-prep-02e3b6)
+
+**사이클 계획**: 직전 사이클(발표덱 v5 초안, 85b4871)이 코드 리스크로 지목한 항목 중 동결 구역이 아닌 것 1건만 처리 — BusinessValuePanel 거시 KPI(693억·66.5억·7%)가 출처맵.md 폐기 선언 값 그대로 살아있어 같은 화면 시나리오 토글(기준 7%=48억)과 모순되던 것을 정정.
+
+### 한 일
+| # | 작업 | 결과 |
+|---|------|------|
+| 1 | `frontend/src/demoData.js` BIZ.refiBalanceKrw 693억→504억, annualInterestKrw 66.5억→48.1215억(출처맵.md 기준 시나리오, SCENARIOS[기준].interest와 동일값)으로 교체 | ✅ 코드 |
+| 2 | `_workspace/발표덱_v5.md`의 해당 리스크 경고 문구를 "해결됨"으로 갱신(문서 사실 정정, 재윤문 아님) | ✅ 문서 |
+
+### 통과·실패
+- 동결구역: 무변경 ✅. BusinessValuePanel/demoData.js는 프리즈 목록(FX 18.12/18.45, 대환 13.59%·연 246만, AML 컷 40/70 등)에 없고 6/27에도 이미 수정 이력 있는 표시 레이어 확인 후 진행
+- 수치: `docs/출처맵.md`(기준 시나리오 잔액 약 504억·이자 약 48억)와 정확히 일치하도록 정정 ✅. PROGRESS_LOG(6/27, 6/30)·CLAUDE.md·number-auditor.md·finals-orchestrator.md 모두 이 폐기를 이미 명시해 판단 근거 충분
+- 화법: 수치 상수 교체만, 문장 신규 작성 없음 ✅
+- 빌드: `npx vite build --outDir /tmp/nightly-build --emptyOutDir` → 37 모듈 ✅
+- 테스트: `python3 -m pytest -q` → 40 passed ✅
+
+### 다음 사이클 제안
+1. NIGHTLY_BACKLOG 저위험 항목은 여전히 소진 상태. v5 발표덱 초안(_workspace)이 지목한 잔여 표시 리스크 2건(GatePills CDD/CTR 단정 배지 문구, STR 큐 상태 배지 raw 'queued' 노출)은 위험 낮은 문구 교체라 다음 사이클 후보로 검토 가능(단, 배지 카피만 — 판정 로직 무변경)
+2. 사람 대기: pip install python-pptx && python docs/build_pptx.py(BIZ 값 변경 반영해 재생성 권장) · 본선 드라이런 · 7/1 법무검증(전자서명) 후 Q1·B5 확정 · PR 리뷰·머지
+
+---
 2026-07-01 00:39 사이클: 저위험 백로그 소진, 스킵. 백로그 미완료 `- [ ]` 1건(검증·개선 카드 실데이터 렌더)은 `[!→리뷰]` GET /metrics/loop 머지에 종속. 나머지는 전부 `[x]` 완료 또는 `[!]`/`[!→리뷰]`(사람 승인 필요). 오늘(6/30) 풀 검증 기록 있어 재검증 안 함. 편집 없음(동결구역·수치·화법·빌드 4점검 대상 자체가 없음). 사람 대기: pip install python-pptx && python docs/build_pptx.py · 본선 드라이런 · 7/1 법무검증(전자서명) 후 Q1·B5 확정 · PR #1 리뷰·머지.
 
 ---

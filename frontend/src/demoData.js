@@ -108,8 +108,8 @@ export const MOCK = {
 // 세션 행동(traces)과 무관한 정적 거시값이라 시연 중에도 일관되게 유지된다.
 export const BIZ = {
   refiConversionRate: 0.07,
-  refiBalanceKrw: 69_300_000_000,
-  annualInterestKrw: 6_650_000_000,
+  refiBalanceKrw: 50_400_000_000,
+  annualInterestKrw: 4_812_150_000,
   perCapitaSavingKrw: 2_461_500,
   cumulativeBorrowers: 240_000,
   marketSharePct: 72,
